@@ -43,6 +43,43 @@
         <item >남자</item>
         <item >여자</item>
     </string-array>
+    <string-array name="ages">
+        <item >선택해 주세요</item>
+        <item >0~10</item>
+        <item >10~20</item>
+        <item >20~30</item>
+        <item >30~40</item>
+        <item >40~50</item>
+        <item >50~60</item>
+        <item >60~70</item>
+    </string-array>
+    <string-array name="times">
+        <item >선택해 주세요</item>
+        <item >1</item>
+        <item >2</item>
+        <item >3</item>
+        <item >4</item>
+        <item >5</item>
+        <item >6</item>
+        <item >7</item>
+        <item >8</item>
+        <item >9</item>
+        <item >10</item>
+        <item >11</item>
+        <item >12</item>
+        <item >13</item>
+        <item >14</item>
+        <item >15</item>
+        <item >16</item>
+        <item >17</item>
+        <item >18</item>
+        <item >19</item>
+        <item >20</item>
+        <item >21</item>
+        <item >22</item>
+        <item >23</item>
+        <item >24</item>
+        </string-array>
     <string-array name="locations">
         <item >선택해 주세요</item>
         <item >종로구</item>

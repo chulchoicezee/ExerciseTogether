@@ -112,16 +112,13 @@ public class MainActivity extends Activity implements Callback, ProfileListener 
 			
 			if(mProDiag != null)
 				mProDiag.dismiss();
-					
+			Log.v(TAG, "mHandler handleMessage msg.what="+msg.what+", mPosition="+mPosition);		
 			switch(msg.what){
 			case INFO.GENERAL_INFO:
 			{
 				switch(mPosition){
 				case MENU.MY_PROFILE:
 					ArrayList<Bean> profiles = new ArrayList<Bean>();
-					profiles.add(new ProfileInfo(1, "����� �������� �ű�2��"));
-					profiles.add(new ProfileInfo(2, "����� �������� �ű�2��"));
-					profiles.add(new ProfileInfo(3, "����� �������� �ű�2��"));
 					
 					fragment = new MyProfileFragment(profiles);
 					break;
@@ -212,9 +209,7 @@ public class MainActivity extends Activity implements Callback, ProfileListener 
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
-		mContext = getApplicationContext();
-		
-		mRegiHelper = new ProfileRegistration(mContext);
+		mRegiHelper = new ProfileRegistration(this);
 		mRegiHelper.setProfileListener(this);
 		
 		mTitle = mDrawerTitle = getTitle();
@@ -285,6 +280,11 @@ public class MainActivity extends Activity implements Callback, ProfileListener 
 			}else{
 		    	//profile 등록하라는 화면 보여주기.
 				Toast.makeText(this, "등록된 프로파일이 없음", Toast.LENGTH_SHORT).show();
+				Message msg = new Message();
+				msg.what = INFO.GENERAL_INFO;
+				msg.arg1 = MENU.MY_PROFILE;
+				mPosition = MENU.MY_PROFILE;
+				mHandler.sendMessage(msg);
 		    }
 			
 		}
@@ -631,6 +631,24 @@ public class MainActivity extends Activity implements Callback, ProfileListener 
 	public void onLoadedProfile(ProfileInfo pi) {
 		// TODO Auto-generated method stub
 		//리스트뷰에 pi를 장착
+	}
+
+
+
+
+	@Override
+	public void onResultProfileSend() {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+
+
+	@Override
+	public void onResultRegidServer(String param) {
+		// TODO Auto-generated method stub
+		
 	}
 	
 

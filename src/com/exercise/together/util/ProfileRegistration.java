@@ -38,6 +38,8 @@ public class ProfileRegistration {
     private final static int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
     public interface ProfileListener{
     	void onLoadedProfile(ProfileInfo pi);
+    	void onResultProfileSend();
+    	void onResultRegidServer(String param);
     };
     ProfileListener mListener;
     /**
@@ -52,6 +54,7 @@ public class ProfileRegistration {
 	public void setProfileListener(ProfileListener pl){
 		mListener = pl;
 	}
+	
 	/**
 	 * Check the device to make sure it has the Google Play Services APK. If
 	 * it doesn't, display a dialog that allows users to download the APK from
@@ -59,14 +62,15 @@ public class ProfileRegistration {
 	 */
 	public boolean checkPlayServices() {
 		int resultCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(mContext);
+		Log.v(TAG, "resultCode="+resultCode);
 	    if (resultCode != ConnectionResult.SUCCESS) {
-	    if (GooglePlayServicesUtil.isUserRecoverableError(resultCode)) {
-	        GooglePlayServicesUtil.getErrorDialog(resultCode, (Activity)mContext,
-	                PLAY_SERVICES_RESOLUTION_REQUEST).show();
-	    } else {
-	        Log.i(TAG, "This device is not supported.");
-	        //finish();
-	        }
+		    if (GooglePlayServicesUtil.isUserRecoverableError(resultCode)) {
+		        GooglePlayServicesUtil.getErrorDialog(resultCode, (Activity)mContext,
+		                PLAY_SERVICES_RESOLUTION_REQUEST).show();
+		    } else {
+		        Log.i(TAG, "This device is not supported.");
+		        //finish();
+		    }
 	        return false;
 	    }
 	    return true;
@@ -80,7 +84,7 @@ public class ProfileRegistration {
 	 * @return registration ID, or empty string if there is no existing
 	 *         registration ID.
 	 */
-	public String getRegistrationId() {
+	public String getRegidLocal() {
 		final SharedPreferences prefs = mContext.getSharedPreferences(MainActivity.class.getSimpleName(), Context.MODE_PRIVATE);
 		String registrationId = prefs.getString(Constants.KEY.REGID, "");
 	    if (registrationId.isEmpty()) {
@@ -99,6 +103,35 @@ public class ProfileRegistration {
 	    return registrationId;
 	}
 	
+	public void getRegidServerAsync(){
+		
+		new AsyncTask<Void, Void, String>(){
+
+			@Override
+			protected String doInBackground(Void... params) {
+				// TODO Auto-generated method stub
+				String regid = null;
+				GoogleCloudMessaging gcm = GoogleCloudMessaging.getInstance(ProfileRegistration.this.mContext);
+				try {
+		        	//gcm에서 regid가져오기
+		            regid = gcm.register(com.exercise.together.util.Config.SENDER_ID);
+		            Log.v(TAG, "regid="+regid);
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				return regid;
+			}
+
+			@Override
+			protected void onPostExecute(String regid) {
+				// TODO Auto-generated method stub
+				super.onPostExecute(regid);
+				mListener.onResultRegidServer(regid);
+			}
+
+		}.execute();
+	}
 	/**
 	 * Stores the registration ID and app versionCode in the application's
 	 * {@code SharedPreferences}.
@@ -120,7 +153,7 @@ public class ProfileRegistration {
 	
 	public void sendProfileAsync(ProfileInfo pi) {
 		
-		new AsyncTask<ProfileInfo, Void, Integer>(){
+		new AsyncTask<ProfileInfo, Void, String>(){
 			
         	HttpResponse response = null;
         	int statusCode = 0;
@@ -136,48 +169,69 @@ public class ProfileRegistration {
             }
 
 			@Override
-			protected Integer doInBackground(ProfileInfo... params) {
+			protected String doInBackground(ProfileInfo... params) {
 				// TODO Auto-generated method stub
             	HttpClient client = new DefaultHttpClient();
             	HttpPost httpPost = new HttpPost("http://chulchoice.cafe24app.com/profile/register");
-            	List<NameValuePair> nameValuePair = new ArrayList<NameValuePair>(5);
-            	nameValuePair.add(new BasicNameValuePair(Constants.KEY.REGID, params[0].email));
-            	nameValuePair.add(new BasicNameValuePair("name", params[0].email));
-            	nameValuePair.add(new BasicNameValuePair("sports", params[0].email));
-            	nameValuePair.add(new BasicNameValuePair("gender", params[0].email));
-            	//nameValuePair.add(new BasicNameValuePair("email", mEmail));
-            	nameValuePair.add(new BasicNameValuePair("location", params[0].location));
+            	HttpResponse response = null;
+				String responseString = null;
+				
+				List<NameValuePair> nameValuePair = new ArrayList<NameValuePair>(11);
+            	nameValuePair.add(new BasicNameValuePair(Constants.KEY.REGID, params[0].regid));
+            	nameValuePair.add(new BasicNameValuePair(Constants.KEY.NAME, params[0].name));
+            	nameValuePair.add(new BasicNameValuePair(Constants.KEY.SPORTS, String.valueOf(params[0].activity)));
+            	nameValuePair.add(new BasicNameValuePair(Constants.KEY.GENDER, String.valueOf(params[0].gender)));
+            	nameValuePair.add(new BasicNameValuePair(Constants.KEY.AGE, String.valueOf(params[0].age)));
+            	nameValuePair.add(new BasicNameValuePair(Constants.KEY.PHONE, params[0].phoneNumber));
+            	nameValuePair.add(new BasicNameValuePair(Constants.KEY.EMAIL, params[0].email));
+            	nameValuePair.add(new BasicNameValuePair(Constants.KEY.LOCATION, params[0].location));
+            	nameValuePair.add(new BasicNameValuePair(Constants.KEY.FROM_HOUR, String.valueOf(params[0].hoursFrom)));
+            	nameValuePair.add(new BasicNameValuePair(Constants.KEY.TO_HOUR, String.valueOf(params[0].hoursTo)));
+            	nameValuePair.add(new BasicNameValuePair(Constants.KEY.ALLOW_DISTURB, String.valueOf(params[0].allowDisturbing)));
             	//Encoding POST data
             	try {
-            	      httpPost.setEntity(new UrlEncodedFormEntity(nameValuePair, "utf-8"));
-            	      response = client.execute(httpPost);
-            	      
-                  	  if(response != null){
-                  		  statusCode = response.getStatusLine().getStatusCode();
-                  		  Log.d(TAG, "Http Post Response : "+statusCode);
-                  		  storeRegistrationId(params[0].regid);
-                  	  }
-            	      
-            	} catch (UnsupportedEncodingException e) {
-            	     e.printStackTrace();
-            	} catch (ClientProtocolException e) {
+					httpPost.setEntity(new UrlEncodedFormEntity(nameValuePair, "utf-8"));
+					response = client.execute(httpPost);
+					
+					try {
+						int statusCode = response.getStatusLine().getStatusCode();
+						Log.v(TAG, "statusCode="+statusCode);
+						if(statusCode == HttpStatus.SC_OK){
+							ByteArrayOutputStream out = new ByteArrayOutputStream();
+							response.getEntity().writeTo(out);
+							responseString = out.toString();
+							out.close();
+							if(responseString != null){
+								Log.v(TAG, "responseString="+responseString);
+								storeRegistrationId(params[0].regid);
+							}
+						}else{
+							response.getEntity().getContent().close();
+						}
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				} catch (UnsupportedEncodingException e) {
 					e.printStackTrace();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-            		
-            	return statusCode;
+				} catch (ClientProtocolException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}            		
+            	return responseString;
 			}
 
 			@Override
-			protected void onPostExecute(Integer statusCode) {
+			protected void onPostExecute(String responseString) {
 				// TODO Auto-generated method stub
-				super.onPostExecute(statusCode);
+				super.onPostExecute(responseString);
 				if(pd != null)
 					pd.dismiss();
 			}
     		
-    	}.execute();
+    	}.execute(pi);
 	}
 	
 	public void getProfileAsync(String regid){
@@ -238,18 +292,30 @@ public class ProfileRegistration {
 				Log.v(TAG, "onPostExecute responseString="+responseString);
 				if(pd != null)
 					pd.dismiss();
-				
+				String regid = null;
+		    	String name = null;
+		        int gender = 0;
+		        int age = 0;
+		        String phone = null;
+		        String email = null;
+		        int activity = 0;
+		        String location = null;
+		        int hoursFrom = 0;
+		        int hoursTo = 0;
+		        int allowDisturbing = 0;
+
 				if(responseString != null){
             		Log.d(TAG, "Http Post responseString : "+responseString);
             		try {
 						JSONArray root = new JSONArray(responseString);
 						Log.v(TAG, "root="+root);
 						for(int i=0; i<root.length(); i++){
-							String regid = root.getJSONObject(i).getString("registration_id");
-							String name = root.getJSONObject(i).getString("name");
-							String gender = root.getJSONObject(i).getString("gender");
-							String location = root.getJSONObject(i).getString("location");
+							regid = root.getJSONObject(i).getString("registration_id");
+							name = root.getJSONObject(i).getString("name");
+							gender = root.getJSONObject(i).getInt("gender");
+							location = root.getJSONObject(i).getString("location");
 							Log.v(TAG, "regid="+regid+", name="+name+", gender="+gender+", location="+location);
+						
 						}
 						//rootObj.getJSONObject("");
 					} catch (JSONException e) {
@@ -257,7 +323,20 @@ public class ProfileRegistration {
 						e.printStackTrace();
 					}
             	}
-				ProfileInfo pi = new ProfileInfo(1, "동작구");
+				
+				ProfileInfo.Builder pb = new ProfileInfo.Builder();
+        		pb.setRegid(regid)
+        			.setName(name)
+	        		.setGender(gender)
+	        		.setAge(age)
+	        		.setLocation(location)
+	        		.setPhonenumber(phone)
+	        		.setEmail(email)
+	        		.setHoursFrom(hoursFrom)
+	        		.setHoursTo(hoursTo)
+	        		.setAllowDisturbing(allowDisturbing);
+	        	ProfileInfo pi = pb.build();
+	        	
 				mListener.onLoadedProfile(pi);
 			}
     		
