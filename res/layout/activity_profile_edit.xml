@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+	android:orientation="vertical"
+	android:layout_marginTop="10dp"
+	android:layout_marginLeft="10dp"
+	android:layout_marginRight="10dp"
+	>
+	
+	<!-- 종목 -->
+    <TextView
+	    android:id="@+id/tv_sports_title"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:text="운동종목"/>
+    <Spinner
+        android:id="@+id/spn_sports"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+	<!-- 이름 -->
+    <TextView
+        android:id="@+id/tv_name_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="이름"/>
+    <EditText
+        android:id="@+id/et_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:textAppearance="?android:attr/textAppearanceMedium">
+        <requestFocus />
+    </EditText>
+    
+	<!-- 성별 -->
+    <TextView
+        android:id="@+id/tv_gender_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="성별"/>
+    <Spinner
+        android:id="@+id/spn_gender"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+    <!-- 위치 -->
+    <TextView
+        android:id="@+id/tv_location_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="위치"/>
+    <Spinner
+        android:id="@+id/spn_location"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+    
+    <!-- 전화번호 -->
+    <TextView
+        android:id="@+id/tv_phone_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="전화번호"/>
+    <EditText
+        android:id="@+id/et_phone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:textAppearance="?android:attr/textAppearanceMedium">
+    </EditText>
+
+    <!-- 이메일 -->
+    <TextView
+        android:id="@+id/tv_email_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="이메일"/>
+    <EditText
+        android:id="@+id/et_email"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:textAppearance="?android:attr/textAppearanceMedium">
+    </EditText>
+    
+    
+</LinearLayout>
