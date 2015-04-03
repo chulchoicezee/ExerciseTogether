@@ -18,6 +18,7 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -37,7 +38,7 @@ public class ProfileRegistration {
 	Context mContext;
     private final static int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
     public interface ProfileListener{
-    	void onLoadedProfile(ProfileInfo pi);
+    	void onLoadedProfile(ArrayList<ProfileInfo> aList);
     	void onResultProfileSend();
     	void onResultRegidServer(String param);
     };
@@ -176,6 +177,8 @@ public class ProfileRegistration {
             	HttpResponse response = null;
 				String responseString = null;
 				
+				Log.v(TAG, "params[0].age="+params[0].age);
+				
 				List<NameValuePair> nameValuePair = new ArrayList<NameValuePair>(11);
             	nameValuePair.add(new BasicNameValuePair(Constants.KEY.REGID, params[0].regid));
             	nameValuePair.add(new BasicNameValuePair(Constants.KEY.NAME, params[0].name));
@@ -289,33 +292,56 @@ public class ProfileRegistration {
 			protected void onPostExecute(String responseString) {
 				// TODO Auto-generated method stub
 				super.onPostExecute(responseString);
+				
 				Log.v(TAG, "onPostExecute responseString="+responseString);
+				
 				if(pd != null)
 					pd.dismiss();
-				String regid = null;
-		    	String name = null;
-		        int gender = 0;
-		        int age = 0;
-		        String phone = null;
-		        String email = null;
-		        int activity = 0;
-		        String location = null;
-		        int hoursFrom = 0;
-		        int hoursTo = 0;
-		        int allowDisturbing = 0;
-
+				
+				ArrayList<ProfileInfo> alist = new ArrayList<ProfileInfo>();
+		        
 				if(responseString != null){
             		Log.d(TAG, "Http Post responseString : "+responseString);
             		try {
 						JSONArray root = new JSONArray(responseString);
 						Log.v(TAG, "root="+root);
+						Log.v(TAG, "root.length="+root.length());
 						for(int i=0; i<root.length(); i++){
-							regid = root.getJSONObject(i).getString("registration_id");
-							name = root.getJSONObject(i).getString("name");
-							gender = root.getJSONObject(i).getInt("gender");
-							location = root.getJSONObject(i).getString("location");
-							Log.v(TAG, "regid="+regid+", name="+name+", gender="+gender+", location="+location);
-						
+							JSONObject jo = root.getJSONObject(i);
+							Log.v(TAG, "jo="+jo);
+							if(jo != null){
+								String regid = jo.getString(Constants.KEY.REGID);
+								String name = jo.getString(Constants.KEY.NAME);
+								int gender = jo.getInt(Constants.KEY.GENDER);
+								int age = jo.getInt(Constants.KEY.AGE);
+								int activity = jo.getInt(Constants.KEY.SPORTS);
+						        String phone = jo.getString(Constants.KEY.PHONE);
+						        String email = jo.getString(Constants.KEY.EMAIL);
+						        String location = jo.getString(Constants.KEY.LOCATION);
+						        int hoursFrom = jo.getInt(Constants.KEY.FROM_HOUR);
+						        int hoursTo = jo.getInt(Constants.KEY.TO_HOUR);
+						        int allowDisturbing = jo.getInt(Constants.KEY.ALLOW_DISTURB);
+						        
+						        Log.v(TAG, "regid="+regid);
+						        Log.v(TAG, "name="+name+", gender="+gender+", age="+age+", activity="+activity);
+						        Log.v(TAG, "phone="+phone+", email="+email+", location="+location+", hoursFrom="+hoursFrom+", hoursTo="+hoursTo+", allowDisturbing="+allowDisturbing);
+						        
+						        ProfileInfo pi = new ProfileInfo.Builder()
+									.setRegid(regid)
+				        			.setName(name)
+				        			.setActivity(activity)
+					        		.setGender(gender)
+					        		.setAge(age)
+					        		.setLocation(location)
+					        		.setPhonenumber(phone)
+					        		.setEmail(email)
+					        		.setHoursFrom(hoursFrom)
+					        		.setHoursTo(hoursTo)
+					        		.setAllowDisturbing(allowDisturbing)
+					        		.build();
+								
+								alist.add(pi);
+							}
 						}
 						//rootObj.getJSONObject("");
 					} catch (JSONException e) {
@@ -324,20 +350,7 @@ public class ProfileRegistration {
 					}
             	}
 				
-				ProfileInfo.Builder pb = new ProfileInfo.Builder();
-        		pb.setRegid(regid)
-        			.setName(name)
-	        		.setGender(gender)
-	        		.setAge(age)
-	        		.setLocation(location)
-	        		.setPhonenumber(phone)
-	        		.setEmail(email)
-	        		.setHoursFrom(hoursFrom)
-	        		.setHoursTo(hoursTo)
-	        		.setAllowDisturbing(allowDisturbing);
-	        	ProfileInfo pi = pb.build();
-	        	
-				mListener.onLoadedProfile(pi);
+				mListener.onLoadedProfile(alist);
 			}
     		
     	}.execute(regid);

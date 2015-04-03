@@ -118,7 +118,7 @@ public class MainActivity extends Activity implements Callback, ProfileListener 
 			{
 				switch(mPosition){
 				case MENU.MY_PROFILE:
-					ArrayList<Bean> profiles = new ArrayList<Bean>();
+					ArrayList<ProfileInfo> profiles = new ArrayList<ProfileInfo>();
 					
 					fragment = new MyProfileFragment(profiles);
 					break;
@@ -628,9 +628,28 @@ public class MainActivity extends Activity implements Callback, ProfileListener 
 
 
 	@Override
-	public void onLoadedProfile(ProfileInfo pi) {
+	public void onLoadedProfile(ArrayList<ProfileInfo> aList) {
 		// TODO Auto-generated method stub
 		//리스트뷰에 pi를 장착
+		Log.v(TAG, "aList.size()="+aList.size());
+		
+		Fragment fragment = new MyProfileFragment(aList);
+		
+		if (fragment != null) {
+			FragmentManager fragmentManager = getFragmentManager();
+			fragmentManager.beginTransaction()
+					.replace(R.id.frame_container, fragment).commit();
+
+			// update selected item and title, then close the drawer
+			mDrawerList.setItemChecked(mPosition, true);
+			mDrawerList.setSelection(mPosition);
+			setTitle(navMenuTitles[mPosition]);
+			mDrawerLayout.closeDrawer(mDrawerList);
+		} else {
+			// error in creating fragment
+			Log.e("MainActivity", "Error in creating fragment");
+		}
+
 	}
 
 

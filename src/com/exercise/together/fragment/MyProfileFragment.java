@@ -18,13 +18,13 @@ import android.widget.Toast;
 import com.exercise.together.MyProfileEditActivity;
 import com.exercise.together.R;
 import com.exercise.together.adapter.AListAdapter;
-import com.exercise.together.util.Bean;
+import com.exercise.together.util.ProfileInfo;
 
 public class MyProfileFragment extends Fragment {
 	
-	ArrayList<Bean> mProfiles;
+	ArrayList<ProfileInfo> mProfiles;
 	
-	public MyProfileFragment(ArrayList<Bean> profiles){
+	public MyProfileFragment(ArrayList<ProfileInfo> profiles){
 		mProfiles = profiles;
 	}
 	

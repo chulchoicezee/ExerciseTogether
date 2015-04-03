@@ -26,7 +26,7 @@ public class ProfileInfo extends Bean
     public int hoursTo;
     public int allowDisturbing;
     
-    public ProfileInfo(Builder builder){
+    ProfileInfo(Builder builder){
     	super();
     	this.regid = builder._regid;
     	this.name = builder._name;

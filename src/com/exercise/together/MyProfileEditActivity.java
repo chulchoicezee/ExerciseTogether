@@ -1,10 +1,12 @@
 package com.exercise.together;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -41,8 +43,8 @@ public class MyProfileEditActivity extends Activity implements OnItemSelectedLis
     EditText et_email = null;
     Spinner spn_fromHour = null;
     Spinner spn_toHour = null;
-    Switch sw_allowDistub = null;
-    boolean mAllowDisturb = true;
+    Switch sw_allowDisturb = null;
+    int mAllowDisturb = 1;
     
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -60,7 +62,7 @@ public class MyProfileEditActivity extends Activity implements OnItemSelectedLis
 		 et_email = (EditText)findViewById(R.id.et_email);
 		 spn_fromHour = (Spinner) findViewById(R.id.spn_fromhour);
 		 spn_toHour = (Spinner) findViewById(R.id.spn_tohour);
-		 sw_allowDistub = (Switch) findViewById(R.id.sw_allow);
+		 sw_allowDisturb = (Switch) findViewById(R.id.sw_allow);
 		 
 		 adpSports = ArrayAdapter.createFromResource(this, R.array.activities, android.R.layout.simple_spinner_item);
 		 adpSports.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -92,13 +94,13 @@ public class MyProfileEditActivity extends Activity implements OnItemSelectedLis
 		 spn_toHour.setAdapter(adpToHour);
 		 spn_toHour.setOnItemSelectedListener(this);
 		 
- 		 sw_allowDistub.setChecked(true);
- 		 sw_allowDistub.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+ 		 sw_allowDisturb.setChecked(true);
+ 		 sw_allowDisturb.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 			
 			@Override
 			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 				// TODO Auto-generated method stub
-				mAllowDisturb = isChecked;
+				mAllowDisturb = isChecked?1:2;
 			}
 		});
 
@@ -134,33 +136,10 @@ public class MyProfileEditActivity extends Activity implements OnItemSelectedLis
             	String regid = mRegiHelper.getRegidLocal();
 
             	if(regid.isEmpty()){
-            		mRegiHelper.getRegidServerAsync();
+            		mRegiHelper.getRegidServerAsync();//onResultRegidServer is called.
             	}else{
         			//프로파일 등록하기
-        			String name = et_name.getText().toString();
-        			int gender = spn_gender.getSelectedItemPosition();
-        			int age = spn_age.getSelectedItemPosition();
-        			int sports = spn_sports.getSelectedItemPosition();
-        			String location = (String)spn_location.getSelectedItem();
-        			String phone = et_phone.getText().toString();
-        			String email = et_email.getText().toString();
-        			int hoursFrom = spn_fromHour.getSelectedItemPosition();
-        			int hoursTo = spn_toHour.getSelectedItemPosition();
-        			
-            		ProfileInfo.Builder pb = new ProfileInfo.Builder();
-            		pb.setRegid(regid)
-            			.setName(name)
-                		.setGender(gender)
-                		.setAge(age)
-                		.setLocation(location)
-                		.setPhonenumber(phone)
-                		.setEmail(email)
-                		.setHoursFrom(hoursFrom)
-                		.setHoursTo(hoursTo)
-                		.setAllowDisturbing(mAllowDisturb?0:1);
-                	ProfileInfo pi = pb.build();
-                		
-            		mRegiHelper.sendProfileAsync(pi);
+            		registerProfileAsync(regid);
             	}
             }
             break;
@@ -168,6 +147,40 @@ public class MyProfileEditActivity extends Activity implements OnItemSelectedLis
 		return super.onOptionsItemSelected(item);
 	}
 
+	void registerProfileAsync(String regid){
+		
+		String name = et_name.getText().toString();
+		int gender = spn_gender.getSelectedItemPosition();
+		int age = spn_age.getSelectedItemPosition();
+		int sports = spn_sports.getSelectedItemPosition();
+		String location = (String)spn_location.getSelectedItem();
+		String phone = et_phone.getText().toString();
+		String email = et_email.getText().toString();
+		int hoursFrom = spn_fromHour.getSelectedItemPosition();
+		int hoursTo = spn_toHour.getSelectedItemPosition();
+		int allowDisturbing = mAllowDisturb;
+		
+		Log.v(TAG, "-----registerProfileAsync regid="+regid);
+        Log.v(TAG, "name="+name+", gender="+gender+", age="+age+", sports="+sports);
+        Log.v(TAG, "phone="+phone+", email="+email+", location="+location+", hoursFrom="+hoursFrom+", hoursTo="+hoursTo+", allowDisturbing="+allowDisturbing);
+        
+		ProfileInfo.Builder pb = new ProfileInfo.Builder();
+		pb.setRegid(regid)
+			.setName(name)
+			.setActivity(sports)
+    		.setGender(gender)
+    		.setAge(age)
+    		.setLocation(location)
+    		.setPhonenumber(phone)
+    		.setEmail(email)
+    		.setHoursFrom(hoursFrom)
+    		.setHoursTo(hoursTo)
+    		.setAllowDisturbing(allowDisturbing);
+    	ProfileInfo pi = pb.build();
+    		
+		mRegiHelper.sendProfileAsync(pi);
+	}
+	
 	@Override
 	public void onItemSelected(AdapterView<?> parent, View arg1, int position,
 			long arg3) {
@@ -190,7 +203,7 @@ public class MyProfileEditActivity extends Activity implements OnItemSelectedLis
 	}
 
 	@Override
-	public void onLoadedProfile(ProfileInfo pi) {
+	public void onLoadedProfile(ArrayList<ProfileInfo> aList) {
 		// TODO Auto-generated method stub
 		
 	}
@@ -206,30 +219,7 @@ public class MyProfileEditActivity extends Activity implements OnItemSelectedLis
 		// TODO Auto-generated method stub
 		if(regid != null && regid.length() > 0){
 			//프로파일 등록하기
-			String name = et_name.getText().toString();
-			int gender = spn_gender.getSelectedItemPosition();
-			int age = spn_age.getSelectedItemPosition();
-			int sports = spn_sports.getSelectedItemPosition();
-			String location = (String)spn_location.getSelectedItem();
-			String phone = et_phone.getText().toString();
-			String email = et_email.getText().toString();
-			int hoursFrom = spn_fromHour.getSelectedItemPosition();
-			int hoursTo = spn_toHour.getSelectedItemPosition();
-			
-    		ProfileInfo.Builder pb = new ProfileInfo.Builder();
-    		pb.setRegid(regid)
-    			.setName(name)
-        		.setGender(gender)
-        		.setAge(age)
-        		.setLocation(location)
-        		.setPhonenumber(phone)
-        		.setEmail(email)
-        		.setHoursFrom(hoursFrom)
-        		.setHoursTo(hoursTo)
-        		.setAllowDisturbing(mAllowDisturb?0:1);
-        	ProfileInfo pi = pb.build();
-        		
-    		mRegiHelper.sendProfileAsync(pi);
+			registerProfileAsync(regid);
 		}else{
 			Toast.makeText(this, "failed to get regid from cloud", Toast.LENGTH_SHORT).show();
 		}

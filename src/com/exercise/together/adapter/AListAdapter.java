@@ -12,18 +12,17 @@ import android.widget.Switch;
 import android.widget.TextView;
 
 import com.exercise.together.R;
-import com.exercise.together.util.Bean;
 import com.exercise.together.util.FriendInfo;
 import com.exercise.together.util.ProfileInfo;
 
-public class AListAdapter extends ArrayAdapter<Bean>{
+public class AListAdapter<T> extends ArrayAdapter<T>{
 
 	private static final String TAG = "AListAdapter";
 	Context mContext;
-	ArrayList<Bean> mItems;
+	ArrayList<T> mItems;
 	int mResRowId;
 	
-	public AListAdapter(Context context, int resId, ArrayList<Bean> items) {
+	public AListAdapter(Context context, int resId, ArrayList<T> items) {
 		super(context, resId, items);
 		// TODO Auto-generated constructor stub
 		mContext = context;
@@ -42,13 +41,15 @@ public class AListAdapter extends ArrayAdapter<Bean>{
 			vc = new ViewCache();
 			vc.tv1 = (TextView)v.findViewById(R.id.textView1);
 			vc.tv2 = (TextView)v.findViewById(R.id.textView2);
+			vc.tv3 = (TextView)v.findViewById(R.id.textView3);
+			vc.tv4 = (TextView)v.findViewById(R.id.textView4);
 			vc.sw1 = (Switch)v.findViewById(R.id.switch1);
 			v.setTag(vc);
 		}
 		
 		vc = (ViewCache) v.getTag();
 		
-		Bean bean = mItems.get(position);
+		T bean = mItems.get(position);
 		
 		if(bean instanceof FriendInfo){
 			Log.v(TAG, "bean instanceof FriendInfo");
@@ -58,26 +59,19 @@ public class AListAdapter extends ArrayAdapter<Bean>{
 		}else if(bean instanceof ProfileInfo){
 			Log.v(TAG, "bean instanceof ProfileInfo");
 			ProfileInfo aProfile = (ProfileInfo)mItems.get(position);
-			String activity = null;
-			switch(aProfile.activity){
-			case 1:
-				activity = "배드민턴";
-				break;
-			case 2:
-				activity = "탁구";
-				break;
-			case 3:
-				activity = "테니스";
-				break;
-			case 4:
-				activity = "인라인";
-				break;
-			default:
-				break;
-			}
-			vc.tv1.setText(activity);
-			vc.tv2.setText(aProfile.location);
-			vc.sw1.setVisibility(View.GONE);
+			Log.v(TAG, "aProfile.name="+aProfile.name);
+			String[] sports = mContext.getResources().getStringArray(R.array.activities);
+			String[] ages = mContext.getResources().getStringArray(R.array.ages);
+			String[] locations = mContext.getResources().getStringArray(R.array.locations);
+			Log.v(TAG, "aProfile.activity="+aProfile.activity);
+			String temp = sports[aProfile.activity];
+			Log.v(TAG, "temp="+temp);
+			vc.tv1.setText(sports[aProfile.activity]);
+			vc.tv2.setText(ages[aProfile.age]);
+			Log.v(TAG, "aProfile.location="+aProfile.location);
+			vc.tv4.setText(aProfile.location);
+			vc.sw1.setChecked(aProfile.allowDisturbing==1?true:false);
+			//vc.sw1.setVisibility(View.GONE);
 		}
 		
 		

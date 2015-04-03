@@ -62,7 +62,7 @@ public final class Constants {
 
 	public static final class KEY{
 		public static final String EXTRA_MESSAGE = "message";
-	    public static final String REGID = "registration_id";
+	    public static final String REGID = "regid";
 	    public static final String DONE_REGISTRATION = "done_registration";
 	    public static final String NAME = "name";
 	    public static final String SPORTS = "favorite_sports";
@@ -71,9 +71,9 @@ public final class Constants {
 	    public static final String PHONE = "phone";
 	    public static final String EMAIL = "email";
 	    public static final String LOCATION = "location";
-	    public static final String FROM_HOUR = "fromhour";
-	    public static final String TO_HOUR = "tohour";
-	    public static final String ALLOW_DISTURB = "allow_disturb";
+	    public static final String FROM_HOUR = "from_when";
+	    public static final String TO_HOUR = "to_when";
+	    public static final String ALLOW_DISTURB = "allow_disturbing";
 	    
 	    public static final String APP_VERSION = "appVersion";
 	    

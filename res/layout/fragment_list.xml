@@ -19,7 +19,8 @@
         android:layout_height="1dp"
         android:background="#CCCCCC" />
     <TextView android:id="@+id/fragment_list_lv_empty"
-        android:text="Empty"
+        android:text="안녕하세요. 함께 운동하기에 오신걸 환영합니다.
+우측상단의 등록하기를 눌러 자신의 프로파일을 만드시면 같이 운동할 수있는 친구들을 만날 수 있답니다."
         android:textSize="22sp"
         android:textColor="@android:color/black"
         style="@android:style/TextAppearance.Medium"
