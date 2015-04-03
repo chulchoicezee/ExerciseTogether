@@ -39,7 +39,7 @@ public class ProfileRegistration {
     private final static int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
     public interface ProfileListener{
     	void onLoadedProfile(ArrayList<ProfileInfo> aList);
-    	void onResultProfileSend();
+    	void onResultProfileSend(Wrapper wrapper);
     	void onResultRegidServer(String param);
     };
     ProfileListener mListener;
@@ -154,7 +154,7 @@ public class ProfileRegistration {
 	
 	public void sendProfileAsync(ProfileInfo pi) {
 		
-		new AsyncTask<ProfileInfo, Void, String>(){
+		new AsyncTask<ProfileInfo, Void, Wrapper>(){
 			
         	HttpResponse response = null;
         	int statusCode = 0;
@@ -170,7 +170,7 @@ public class ProfileRegistration {
             }
 
 			@Override
-			protected String doInBackground(ProfileInfo... params) {
+			protected Wrapper doInBackground(ProfileInfo... params) {
 				// TODO Auto-generated method stub
             	HttpClient client = new DefaultHttpClient();
             	HttpPost httpPost = new HttpPost("http://chulchoice.cafe24app.com/profile/register");
@@ -197,20 +197,16 @@ public class ProfileRegistration {
 					response = client.execute(httpPost);
 					
 					try {
-						int statusCode = response.getStatusLine().getStatusCode();
+						statusCode = response.getStatusLine().getStatusCode();
 						Log.v(TAG, "statusCode="+statusCode);
-						if(statusCode == HttpStatus.SC_OK){
-							ByteArrayOutputStream out = new ByteArrayOutputStream();
-							response.getEntity().writeTo(out);
-							responseString = out.toString();
-							out.close();
-							if(responseString != null){
-								Log.v(TAG, "responseString="+responseString);
-								storeRegistrationId(params[0].regid);
-							}
-						}else{
-							response.getEntity().getContent().close();
-						}
+						ByteArrayOutputStream out = new ByteArrayOutputStream();
+						response.getEntity().writeTo(out);
+						responseString = out.toString();
+						out.close();
+					
+						if(statusCode == HttpStatus.SC_OK)
+							storeRegistrationId(params[0].regid);
+					
 					} catch (IOException e) {
 						e.printStackTrace();
 					}
@@ -222,16 +218,23 @@ public class ProfileRegistration {
 				} catch (IOException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
-				}            		
-            	return responseString;
+				}      
+            	
+            	Wrapper wrapper = new Wrapper();
+            	wrapper.responseCode = statusCode;
+            	wrapper.responseString = responseString;
+            	
+            	return wrapper;
 			}
 
 			@Override
-			protected void onPostExecute(String responseString) {
+			protected void onPostExecute(Wrapper wrapper) {
 				// TODO Auto-generated method stub
-				super.onPostExecute(responseString);
+				super.onPostExecute(wrapper);
 				if(pd != null)
 					pd.dismiss();
+				
+				mListener.onResultProfileSend(wrapper);
 			}
     		
     	}.execute(pi);
@@ -354,5 +357,10 @@ public class ProfileRegistration {
 			}
     		
     	}.execute(regid);
+	}
+	
+	public class Wrapper{
+		public int responseCode;
+		public String responseString;
 	}
 }

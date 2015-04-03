@@ -3,11 +3,13 @@ package com.exercise.together.adapter;
 import java.util.ArrayList;
 
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.Switch;
 import android.widget.TextView;
 
@@ -39,6 +41,7 @@ public class AListAdapter<T> extends ArrayAdapter<T>{
 		if(v == null){
 			v = LayoutInflater.from(mContext).inflate(mResRowId, parent, false);
 			vc = new ViewCache();
+			vc.iv1 = (ImageView)v.findViewById(R.id.imageView1);
 			vc.tv1 = (TextView)v.findViewById(R.id.textView1);
 			vc.tv2 = (TextView)v.findViewById(R.id.textView2);
 			vc.tv3 = (TextView)v.findViewById(R.id.textView3);
@@ -66,10 +69,12 @@ public class AListAdapter<T> extends ArrayAdapter<T>{
 			Log.v(TAG, "aProfile.activity="+aProfile.activity);
 			String temp = sports[aProfile.activity];
 			Log.v(TAG, "temp="+temp);
+			TypedArray imgs = mContext.getResources().obtainTypedArray(R.array.nav_drawer_icons);
+			
+			vc.iv1.setImageResource(imgs.getResourceId(aProfile.activity,  -1));
 			vc.tv1.setText(sports[aProfile.activity]);
-			vc.tv2.setText(ages[aProfile.age]);
-			Log.v(TAG, "aProfile.location="+aProfile.location);
-			vc.tv4.setText(aProfile.location);
+			vc.tv2.setText("연령대 : "+ages[aProfile.age]);
+			vc.tv4.setText("지역 : "+aProfile.location);
 			vc.sw1.setChecked(aProfile.allowDisturbing==1?true:false);
 			//vc.sw1.setVisibility(View.GONE);
 		}
@@ -79,6 +84,7 @@ public class AListAdapter<T> extends ArrayAdapter<T>{
 	}
 
 	class ViewCache{
+		ImageView iv1;
 		TextView tv1;
 		TextView tv2;
 		TextView tv3;

@@ -1,7 +1,8 @@
 package com.exercise.together;
 
-import java.io.IOException;
 import java.util.ArrayList;
+
+import org.apache.http.HttpStatus;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -14,8 +15,8 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
-import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.CompoundButton;
+import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Switch;
@@ -24,7 +25,7 @@ import android.widget.Toast;
 import com.exercise.together.util.ProfileInfo;
 import com.exercise.together.util.ProfileRegistration;
 import com.exercise.together.util.ProfileRegistration.ProfileListener;
-import com.google.android.gms.gcm.GoogleCloudMessaging;
+import com.exercise.together.util.ProfileRegistration.Wrapper;
 
 public class MyProfileEditActivity extends Activity implements OnItemSelectedListener, ProfileListener{
 
@@ -126,12 +127,19 @@ public class MyProfileEditActivity extends Activity implements OnItemSelectedLis
 		switch(item.getItemId()) {
         case R.id.register :
             String message = null;
+            
+            if(et_name.getText().toString().length() < 1 || spn_sports.getSelectedItemPosition() == 0 
+            		|| spn_age.getSelectedItemPosition() == 0 || spn_location.getSelectedItemPosition() == 0 ){
+            	Toast.makeText(this, "필수 항목을 입력하세요.", Toast.LENGTH_SHORT).show();
+            	return false;
+            }
+            	
             if (!mRegiHelper.checkPlayServices()) {
             	message = "GCM 서비스 불가";
             	Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
                 return true;
             }else{
-            	Toast.makeText(this, "등록 진행", Toast.LENGTH_SHORT).show();
+            	Toast.makeText(this, "등록합니다", Toast.LENGTH_SHORT).show();
             	
             	String regid = mRegiHelper.getRegidLocal();
 
@@ -209,9 +217,14 @@ public class MyProfileEditActivity extends Activity implements OnItemSelectedLis
 	}
 
 	@Override
-	public void onResultProfileSend() {
+	public void onResultProfileSend(Wrapper wrapper) {
 		// TODO Auto-generated method stub
+		Log.v(TAG, "wrapper.responseCode="+wrapper.responseCode);
+		Toast.makeText(this, wrapper.responseString, Toast.LENGTH_SHORT).show();
 		
+		if(wrapper.responseCode == HttpStatus.SC_OK){
+			finish();
+		}
 	}
 
 	@Override

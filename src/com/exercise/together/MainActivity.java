@@ -1,7 +1,6 @@
 package com.exercise.together;
 
 import java.io.BufferedReader;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -14,7 +13,6 @@ import java.util.List;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
-import org.apache.http.HttpStatus;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
@@ -66,9 +64,7 @@ import com.exercise.together.util.Constants.MENU;
 import com.exercise.together.util.ProfileInfo;
 import com.exercise.together.util.ProfileRegistration;
 import com.exercise.together.util.ProfileRegistration.ProfileListener;
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GooglePlayServicesUtil;
-import com.google.android.gms.gcm.GoogleCloudMessaging;
+import com.exercise.together.util.ProfileRegistration.Wrapper;
 
 public class MainActivity extends Activity implements Callback, ProfileListener {
 	protected static final String TAG = "MainActivity";
@@ -626,7 +622,6 @@ public class MainActivity extends Activity implements Callback, ProfileListener 
 		}.execute(str);
 	}
 
-
 	@Override
 	public void onLoadedProfile(ArrayList<ProfileInfo> aList) {
 		// TODO Auto-generated method stub
@@ -652,24 +647,16 @@ public class MainActivity extends Activity implements Callback, ProfileListener 
 
 	}
 
-
-
-
 	@Override
-	public void onResultProfileSend() {
+	public void onResultProfileSend(Wrapper wrapper) {
 		// TODO Auto-generated method stub
 		
 	}
-
-
-
 
 	@Override
 	public void onResultRegidServer(String param) {
 		// TODO Auto-generated method stub
 		
 	}
-	
-
 	
 }
