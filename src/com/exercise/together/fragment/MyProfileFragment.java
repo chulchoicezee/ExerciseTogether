@@ -2,27 +2,52 @@ package com.exercise.together.fragment;
 
 import java.util.ArrayList;
 
+import org.apache.http.HttpStatus;
+
 import android.app.Fragment;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.util.Log;
+import android.view.ContextMenu;
+import android.view.ContextMenu.ContextMenuInfo;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.AdapterContextMenuInfo;
+import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.exercise.together.MainActivity;
 import com.exercise.together.MyProfileEditActivity;
 import com.exercise.together.R;
 import com.exercise.together.adapter.AListAdapter;
+import com.exercise.together.util.Constants;
 import com.exercise.together.util.ProfileInfo;
+import com.exercise.together.util.ProfileRegistration;
+import com.exercise.together.util.ProfileRegistration.ProfileListener;
+import com.exercise.together.util.ProfileRegistration.Wrapper;
 
-public class MyProfileFragment extends Fragment {
+public class MyProfileFragment extends Fragment implements ProfileListener {
 	
+	private static final String TAG = "MyProfileFragment";
 	ArrayList<ProfileInfo> mProfiles;
+	ProfileRegistration mRegiHelper = null;
+	AListAdapter mListAdapter = null;
+	ListView mListview = null;
+	ProgressDialog mPd = null;
 	
 	public MyProfileFragment(ArrayList<ProfileInfo> profiles){
 		mProfiles = profiles;
@@ -44,12 +69,38 @@ public class MyProfileFragment extends Fragment {
 		// TODO Auto-generated method stub
 		super.onActivityCreated(savedInstanceState);
 		
-		ListView lv = (ListView)getActivity().findViewById(R.id.fragment_list_lv);
-		AListAdapter la = new AListAdapter(getActivity(), R.layout.list_layout, mProfiles);
-		TextView emptyView = (TextView)getActivity().findViewById(R.id.fragment_list_lv_empty);
-        lv.setEmptyView(emptyView);
-        
-		lv.setAdapter(la);
+		
+		mRegiHelper = new ProfileRegistration(getActivity());
+		mRegiHelper.setProfileListener(this);
+		
+		mListview = (ListView)getActivity().findViewById(R.id.fragment_list_lv);
+		//Log.v(TAG, "mProfiles="+mProfiles+", mProfiles.len="+mProfiles.size());
+		mListAdapter = new AListAdapter<ProfileInfo>(getActivity(), R.layout.list_layout, mProfiles, mRegiHelper);
+		
+		mListview.setAdapter(mListAdapter);
+		registerForContextMenu(mListview);
+		
+		final SharedPreferences prefs = getActivity().getSharedPreferences(MainActivity.class.getSimpleName(), Context.MODE_PRIVATE);
+		boolean done = prefs.getBoolean(Constants.KEY.DONE_REGISTRATION, false);
+	    Log.v(TAG, "done="+done);
+		if(done){
+	    	String regid = prefs.getString(Constants.KEY.REGID, "");
+	    	mRegiHelper.getProfileAsync(regid);//onLoadedProfile에서 listview로 바인딩함.
+	        
+		}
+		/*lv.setOnItemLongClickListener(new OnItemLongClickListener() {
+
+			@Override
+			public boolean onItemLongClick(AdapterView<?> parent, View view,
+					int position, long id) {
+				// TODO Auto-generated method stub
+				ProfileInfo pi = (ProfileInfo) parent.getItemAtPosition(position);
+				Log.v(TAG, "pi.name"+pi.name);
+				mRegiHelper.deleteProfileAsync(pi);
+				return false;
+			}
+			
+		});*/
 	}
 
 	@Override
@@ -77,6 +128,106 @@ public class MyProfileFragment extends Fragment {
 		
 		return super.onOptionsItemSelected(item);
 	}
+
+	@Override
+	public boolean onContextItemSelected(MenuItem item) {
+		// TODO Auto-generated method stub
+		AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
+		Log.v(TAG, ""+info.id);
+		ProfileInfo pi = (ProfileInfo)mListAdapter.getItem((int)info.id);
+		Log.v(TAG, "pi.name="+pi.name);
+		
+		switch(item.getItemId()){
+		case 1:
+			Log.v(TAG, "onContextItemSelected");
+			mRegiHelper.deleteProfileAsync(pi);
+			break;
+		default:
+			break;
+		}
+		return super.onContextItemSelected(item);
+	}
+
+	@Override
+	public void onCreateContextMenu(ContextMenu menu, View v,
+			ContextMenuInfo menuInfo) {
+		// TODO Auto-generated method stub
+		super.onCreateContextMenu(menu, v, menuInfo);
+		menu.add(Menu.NONE, 1, Menu.NONE, "Delete?");
+	}
+
+	@Override
+	public void onLoadedProfile(ArrayList<ProfileInfo> aList) {
+		// TODO Auto-generated method stub
+		//리스트뷰에 pi를 장착
+		mProfiles = aList;
+		mListAdapter.clear();
+		for(ProfileInfo pi : mProfiles){
+			mListAdapter.add(pi);
+		}
+		
+		TextView emptyView = (TextView)getActivity().findViewById(R.id.fragment_list_lv_empty);
+		emptyView.setText(R.string.profileEmpty);
+		mListview.setEmptyView(emptyView);
+        
+		//mListAdapter.notifyDataSetChanged();
+		/*Fragment fragment = new MyProfileFragment(aList);
+		
+		if (fragment != null) {
+			FragmentManager fragmentManager = getFragmentManager();
+			fragmentManager.beginTransaction()
+					.replace(R.id.frame_container, fragment).commit();
+
+			// update selected item and title, then close the drawer
+			mDrawerList.setItemChecked(mPosition, true);
+			mDrawerList.setSelection(mPosition);
+			setTitle(navMenuTitles[mPosition]);
+			mDrawerLayout.closeDrawer(mDrawerList);
+		} else {
+			// error in creating fragment
+			Log.e("MainActivity", "Error in creating fragment");
+		}*/
+
+	}
+
+	@Override
+	public void onResultProfileSend(Wrapper wrapper) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onResultRegidServer(String param) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onResultProfileDelete(Wrapper wrapper) {
+		// TODO Auto-generated method stub
+		if(wrapper.responseCode == HttpStatus.SC_OK){
+			String regid = mRegiHelper.getRegidLocal();
+			mRegiHelper.getProfileAsync(regid);
+		}
+		Toast.makeText(getActivity(), wrapper.responseString, Toast.LENGTH_SHORT).show();
+	}
 	
-	
+	Handler mHandler = new Handler(){
+
+		@Override
+		public void handleMessage(Message msg) {
+			// TODO Auto-generated method stub
+			super.handleMessage(msg);
+			Log.v(TAG, "handler");
+			mListAdapter.notifyDataSetChanged();
+			
+		}
+	};
+
+	@Override
+	public void onResultProfileUpdate(Wrapper wrapper) {
+		// TODO Auto-generated method stub
+		
+		Toast.makeText(getActivity(), wrapper.responseString, Toast.LENGTH_SHORT).show();
+	}
 }

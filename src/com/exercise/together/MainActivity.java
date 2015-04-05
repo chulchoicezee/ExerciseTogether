@@ -66,7 +66,7 @@ import com.exercise.together.util.ProfileRegistration;
 import com.exercise.together.util.ProfileRegistration.ProfileListener;
 import com.exercise.together.util.ProfileRegistration.Wrapper;
 
-public class MainActivity extends Activity implements Callback, ProfileListener {
+public class MainActivity extends Activity implements Callback {
 	protected static final String TAG = "MainActivity";
 	private DrawerLayout mDrawerLayout;
 	private ListView mDrawerList;
@@ -205,8 +205,6 @@ public class MainActivity extends Activity implements Callback, ProfileListener 
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
-		mRegiHelper = new ProfileRegistration(this);
-		mRegiHelper.setProfileListener(this);
 		
 		mTitle = mDrawerTitle = getTitle();
 
@@ -267,21 +265,21 @@ public class MainActivity extends Activity implements Callback, ProfileListener 
 		if (savedInstanceState == null) {
 			// on first time display view for first nav item
 			//displayView(0);
-			final SharedPreferences prefs = getSharedPreferences(MainActivity.class.getSimpleName(), Context.MODE_PRIVATE);
+			/*final SharedPreferences prefs = getSharedPreferences(MainActivity.class.getSimpleName(), Context.MODE_PRIVATE);
 			boolean done = prefs.getBoolean(Constants.KEY.DONE_REGISTRATION, false);
 		    if(done){
 		    	String regid = prefs.getString(Constants.KEY.REGID, "");
 		    	mRegiHelper.getProfileAsync(regid);//onLoadedProfile에서 listview로 바인딩함.
 		        
-			}else{
+			}else{*/
 		    	//profile 등록하라는 화면 보여주기.
-				Toast.makeText(this, "등록된 프로파일이 없음", Toast.LENGTH_SHORT).show();
+				//Toast.makeText(this, "등록된 프로파일이 없음", Toast.LENGTH_SHORT).show();
 				Message msg = new Message();
 				msg.what = INFO.GENERAL_INFO;
 				msg.arg1 = MENU.MY_PROFILE;
 				mPosition = MENU.MY_PROFILE;
 				mHandler.sendMessage(msg);
-		    }
+		    //}
 			
 		}
 	}
@@ -621,42 +619,4 @@ public class MainActivity extends Activity implements Callback, ProfileListener 
 			
 		}.execute(str);
 	}
-
-	@Override
-	public void onLoadedProfile(ArrayList<ProfileInfo> aList) {
-		// TODO Auto-generated method stub
-		//리스트뷰에 pi를 장착
-		Log.v(TAG, "aList.size()="+aList.size());
-		
-		Fragment fragment = new MyProfileFragment(aList);
-		
-		if (fragment != null) {
-			FragmentManager fragmentManager = getFragmentManager();
-			fragmentManager.beginTransaction()
-					.replace(R.id.frame_container, fragment).commit();
-
-			// update selected item and title, then close the drawer
-			mDrawerList.setItemChecked(mPosition, true);
-			mDrawerList.setSelection(mPosition);
-			setTitle(navMenuTitles[mPosition]);
-			mDrawerLayout.closeDrawer(mDrawerList);
-		} else {
-			// error in creating fragment
-			Log.e("MainActivity", "Error in creating fragment");
-		}
-
-	}
-
-	@Override
-	public void onResultProfileSend(Wrapper wrapper) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void onResultRegidServer(String param) {
-		// TODO Auto-generated method stub
-		
-	}
-	
 }

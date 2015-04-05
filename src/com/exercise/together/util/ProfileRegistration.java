@@ -12,6 +12,7 @@ import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
@@ -24,10 +25,13 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.database.CursorJoiner.Result;
 import android.os.AsyncTask;
+import android.os.Bundle;
 import android.util.Log;
 
 import com.exercise.together.MainActivity;
+import com.exercise.together.util.Constants.Column;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
@@ -41,6 +45,8 @@ public class ProfileRegistration {
     	void onLoadedProfile(ArrayList<ProfileInfo> aList);
     	void onResultProfileSend(Wrapper wrapper);
     	void onResultRegidServer(String param);
+    	void onResultProfileDelete(Wrapper wrapper);
+    	void onResultProfileUpdate(Wrapper wrapper);
     };
     ProfileListener mListener;
     /**
@@ -156,8 +162,7 @@ public class ProfileRegistration {
 		
 		new AsyncTask<ProfileInfo, Void, Wrapper>(){
 			
-        	HttpResponse response = null;
-        	int statusCode = 0;
+        	int responseCode = 0;
         	ProgressDialog pd;
         	
         	@Override
@@ -194,22 +199,17 @@ public class ProfileRegistration {
             	//Encoding POST data
             	try {
 					httpPost.setEntity(new UrlEncodedFormEntity(nameValuePair, "utf-8"));
+					
 					response = client.execute(httpPost);
-					
-					try {
-						statusCode = response.getStatusLine().getStatusCode();
-						Log.v(TAG, "statusCode="+statusCode);
-						ByteArrayOutputStream out = new ByteArrayOutputStream();
-						response.getEntity().writeTo(out);
-						responseString = out.toString();
-						out.close();
-					
-						if(statusCode == HttpStatus.SC_OK)
-							storeRegistrationId(params[0].regid);
-					
-					} catch (IOException e) {
-						e.printStackTrace();
-					}
+					responseCode = response.getStatusLine().getStatusCode();
+					Log.v(TAG, "responseCode="+responseCode);
+					ByteArrayOutputStream out = new ByteArrayOutputStream();
+					response.getEntity().writeTo(out);
+					responseString = out.toString();
+					out.close();
+				
+					if(responseCode == HttpStatus.SC_OK)
+						storeRegistrationId(params[0].regid);
 				} catch (UnsupportedEncodingException e) {
 					e.printStackTrace();
 				} catch (ClientProtocolException e1) {
@@ -221,7 +221,7 @@ public class ProfileRegistration {
 				}      
             	
             	Wrapper wrapper = new Wrapper();
-            	wrapper.responseCode = statusCode;
+            	wrapper.responseCode = responseCode;
             	wrapper.responseString = responseString;
             	
             	return wrapper;
@@ -244,8 +244,7 @@ public class ProfileRegistration {
 
 		new AsyncTask<String, Void, String>(){
 
-	    	HttpResponse response = null;
-	    	int statusCode = 0;
+	    	int responseCode = 0;
 	    	ProgressDialog pd;
 
         	@Override
@@ -255,29 +254,28 @@ public class ProfileRegistration {
 				pd = new ProgressDialog(mContext);
             	pd.setMessage("getting profile from server");
             	pd.show();
+            	Log.v(TAG, "onPreExecute");
             }
 
 			@Override
 			protected String doInBackground(String... params) {
 				// TODO Auto-generated method stub
+				Log.v(TAG, "doInBackground");
             	HttpClient client = new DefaultHttpClient();
             	HttpGet httpGet = new HttpGet("http://chulchoice.cafe24app.com/profile/get/"+params[0]);
             	Log.v(TAG, "params[0]="+params[0]);
             	HttpResponse response = null;
             	String responseString = null;
-        		try {
-            	      response = client.execute(httpGet);
-            	      int statusCode = response.getStatusLine().getStatusCode();
-            	      Log.v(TAG, "statusCode="+statusCode);
-      				  if(statusCode == HttpStatus.SC_OK){
-      					  ByteArrayOutputStream out = new ByteArrayOutputStream();
-      					  response.getEntity().writeTo(out);
-      					  responseString = out.toString();
-      					  out.close();
-      				  }else{
-      					  response.getEntity().getContent().close();
-      				  }
-            	} catch (UnsupportedEncodingException e) 
+        		
+            	try {
+        			response = client.execute(httpGet);
+        			responseCode = response.getStatusLine().getStatusCode();
+					Log.v(TAG, "responseCode="+responseCode);
+					ByteArrayOutputStream out = new ByteArrayOutputStream();
+					response.getEntity().writeTo(out);
+					responseString = out.toString();
+					out.close();
+        		} catch (UnsupportedEncodingException e) 
             	{
             	     e.printStackTrace();
             	} catch (ClientProtocolException e) {
@@ -313,6 +311,7 @@ public class ProfileRegistration {
 							JSONObject jo = root.getJSONObject(i);
 							Log.v(TAG, "jo="+jo);
 							if(jo != null){
+								int id = jo.getInt(Constants.KEY.ID);
 								String regid = jo.getString(Constants.KEY.REGID);
 								String name = jo.getString(Constants.KEY.NAME);
 								int gender = jo.getInt(Constants.KEY.GENDER);
@@ -330,6 +329,7 @@ public class ProfileRegistration {
 						        Log.v(TAG, "phone="+phone+", email="+email+", location="+location+", hoursFrom="+hoursFrom+", hoursTo="+hoursTo+", allowDisturbing="+allowDisturbing);
 						        
 						        ProfileInfo pi = new ProfileInfo.Builder()
+									.setid(id)
 									.setRegid(regid)
 				        			.setName(name)
 				        			.setActivity(activity)
@@ -359,8 +359,143 @@ public class ProfileRegistration {
     	}.execute(regid);
 	}
 	
+	public void deleteProfileAsync(ProfileInfo pi){
+		
+		new AsyncTask<ProfileInfo, Void, Wrapper>(){
+
+			ProgressDialog pd;
+			int responseCode = 0;
+	    	String responseString = null;
+	    	
+        	@Override
+			protected void onPreExecute() {
+				// TODO Auto-generated method stub
+				super.onPreExecute();
+				pd = new ProgressDialog(mContext);
+            	pd.setMessage("Deleting profile at server");
+            	pd.show();
+            	Log.v(TAG, "onPreExecute");
+            }
+			
+			@Override
+			protected Wrapper doInBackground(ProfileInfo... params) {
+				// TODO Auto-generated method stub
+				HttpClient client = new DefaultHttpClient();
+				HttpDelete httpDelete = new HttpDelete("http://chulchoice.cafe24app.com/profile/delete/"+params[0].id);
+				Log.v(TAG, "params[0].id="+params[0].id);
+            	HttpResponse response = null;
+            	
+            	try {
+        			response = client.execute(httpDelete);
+        			responseCode = response.getStatusLine().getStatusCode();
+					Log.v(TAG, "responseCode="+responseCode);
+					ByteArrayOutputStream out = new ByteArrayOutputStream();
+					response.getEntity().writeTo(out);
+					responseString = out.toString();
+					out.close();
+        		} catch (UnsupportedEncodingException e) 
+            	{
+            	     e.printStackTrace();
+            	} catch (ClientProtocolException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+            	
+            	Wrapper wrapper = new Wrapper();
+            	wrapper.responseCode = responseCode;
+            	wrapper.responseString = responseString;
+            	
+            	return wrapper;
+			}
+
+			@Override
+			protected void onPostExecute(Wrapper wrapper) {
+				// TODO Auto-generated method stub
+				super.onPostExecute(wrapper);
+				
+				if(pd != null)
+					pd.dismiss();
+				
+				mListener.onResultProfileDelete(wrapper);
+			}
+			
+		}.execute(pi);
+	}
+	
+	public void updateProfileAsync(Bundle bd){
+		
+		new AsyncTask<Bundle, Void, Wrapper>(){
+
+			int responseCode = 0;
+	    	String responseString = null;
+	    	
+        	@Override
+			protected Wrapper doInBackground(Bundle... params) {
+				// TODO Auto-generated method stub
+        		HttpClient client = new DefaultHttpClient();
+            	HttpPost httpPost = new HttpPost("http://chulchoice.cafe24app.com/profile/update");
+            	HttpResponse response = null;
+				String responseString = null;
+				
+				//int allowDist = params[0].getInt(Constants.KEY.ALLOW_DISTURB);
+				
+				Bundle bd = params[0];
+				Log.v(TAG, "bd.size="+bd.size());
+				List<NameValuePair> nameValuePair = new ArrayList<NameValuePair>(bd.size());
+				for(Column c : Column.values()){
+					Log.v(TAG, "c="+c);
+					String value = bd.getString(c.name());
+					Log.v(TAG, "value="+value);
+					if(value != null && value.isEmpty() != true){
+						Log.v(TAG, "c.name()="+c.name()+", value="+value);
+						nameValuePair.add(new BasicNameValuePair(c.name(), value));	
+					}
+	            	
+				}
+            	//Encoding POST data
+            	try {
+					httpPost.setEntity(new UrlEncodedFormEntity(nameValuePair, "utf-8"));
+					
+					response = client.execute(httpPost);
+					responseCode = response.getStatusLine().getStatusCode();
+					Log.v(TAG, "responseCode="+responseCode);
+					ByteArrayOutputStream out = new ByteArrayOutputStream();
+					response.getEntity().writeTo(out);
+					responseString = out.toString();
+					out.close();
+				} catch (UnsupportedEncodingException e) {
+					e.printStackTrace();
+				} catch (ClientProtocolException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}      
+            	
+            	Wrapper wrapper = new Wrapper();
+            	wrapper.responseCode = responseCode;
+            	wrapper.responseString = responseString;
+            	
+            	return wrapper;
+			}
+			
+			@Override
+			protected void onPostExecute(Wrapper wrapper) {
+				// TODO Auto-generated method stub
+				super.onPostExecute(wrapper);
+				
+				mListener.onResultProfileUpdate(wrapper);
+			}
+		}.execute(bd);
+	}
+	
 	public class Wrapper{
 		public int responseCode;
 		public String responseString;
 	}
+	
 }

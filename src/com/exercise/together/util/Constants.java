@@ -62,6 +62,7 @@ public final class Constants {
 
 	public static final class KEY{
 		public static final String EXTRA_MESSAGE = "message";
+		public static final String ID = "id";
 	    public static final String REGID = "regid";
 	    public static final String DONE_REGISTRATION = "done_registration";
 	    public static final String NAME = "name";
@@ -135,4 +136,32 @@ public final class Constants {
 		
 	}
 	
+	/*public enum _Column{
+        id(1), regid(2), name(3), gender(4);
+   
+        private int rank;
+       
+        private Column(int rank){
+            this.rank = rank;
+        }
+       
+        public int getRank(){
+            return rank;
+        }
+	}*/
+	
+	public enum Column{
+		id,
+		regid,
+		name,
+		gender,
+		age,
+		sports,
+		location,
+		phone,
+		email,
+		from_when,
+		to_when,
+		allow_disturbing
+	}
 }

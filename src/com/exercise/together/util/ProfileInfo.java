@@ -5,6 +5,8 @@ import android.os.Parcelable;
 
 public class ProfileInfo extends Bean
 {
+	/* unique id*/
+	public int id;
 	/* regid max 200*/ 
 	public String regid;
 	/* name */
@@ -28,6 +30,7 @@ public class ProfileInfo extends Bean
     
     ProfileInfo(Builder builder){
     	super();
+    	this.id = builder._id;
     	this.regid = builder._regid;
     	this.name = builder._name;
     	this.gender = builder._gender;
@@ -43,6 +46,7 @@ public class ProfileInfo extends Bean
     
     public static class Builder {
     	
+    	public int _id;
     	public String _regid;
     	public String _name;
         public int _gender;
@@ -69,6 +73,7 @@ public class ProfileInfo extends Bean
         	this._hoursTo = hoursTo;
         	this._allowDisturbing = allowDisturbing;
         }
+        public Builder setid(int id){this._id = id; return this; }
         public Builder setRegid(String regid){this._regid = regid; return this; }
         public Builder setName(String name){this._name = name; return this; }
         public Builder setGender(int gender){this._gender = gender; return this; }
@@ -102,7 +107,8 @@ public class ProfileInfo extends Bean
     public void writeToParcel(Parcel dest, int flags)
     {
         // TODO Auto-generated method stub
-    	dest.writeString(regid);
+    	dest.writeInt(id);
+        dest.writeString(regid);
     	dest.writeString(name);
         dest.writeInt(gender);
         dest.writeInt(age);
@@ -116,6 +122,7 @@ public class ProfileInfo extends Bean
     }
 
     public void readFromParcel(Parcel in){
+    	id = in.readInt();
     	regid = in.readString();
     	name = in.readString();
     	gender = in.readInt();

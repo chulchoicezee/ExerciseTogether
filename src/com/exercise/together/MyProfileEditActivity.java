@@ -238,4 +238,16 @@ public class MyProfileEditActivity extends Activity implements OnItemSelectedLis
 		}
 
 	}
+
+	@Override
+	public void onResultProfileDelete(Wrapper wrapper) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onResultProfileUpdate(Wrapper wrapper) {
+		// TODO Auto-generated method stub
+		
+	}
 }

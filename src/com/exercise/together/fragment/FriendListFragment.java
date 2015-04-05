@@ -44,7 +44,7 @@ public class FriendListFragment extends Fragment{
 		super.onActivityCreated(savedInstanceState);
 		
 		ListView lv = (ListView)getActivity().findViewById(R.id.fragment_list_lv);
-		AListAdapter la = new AListAdapter(getActivity(), R.layout.list_layout, mFriendList);
+		AListAdapter la = new AListAdapter(getActivity(), R.layout.list_layout, mFriendList, null);
 		TextView emptyView = (TextView)getActivity().findViewById(R.id.fragment_list_lv_empty);
         lv.setEmptyView(emptyView);
         
