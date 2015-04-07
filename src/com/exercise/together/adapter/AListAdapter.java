@@ -92,13 +92,10 @@ public class AListAdapter<T> extends ArrayAdapter<T>{
 		}else if(bean instanceof ProfileInfo){
 			Log.v(TAG, "bean instanceof ProfileInfo");
 			ProfileInfo aProfile = (ProfileInfo)mItems.get(position);
-			Log.v(TAG, "aProfile.name="+aProfile.name);
 			String[] sports = mContext.getResources().getStringArray(R.array.activities);
 			String[] ages = mContext.getResources().getStringArray(R.array.ages);
 			String[] locations = mContext.getResources().getStringArray(R.array.locations);
-			Log.v(TAG, "aProfile.activity="+aProfile.activity);
 			String temp = sports[aProfile.activity];
-			Log.v(TAG, "temp="+temp);
 			TypedArray imgs = mContext.getResources().obtainTypedArray(R.array.nav_drawer_icons);
 			
 			vc.iv1.setImageResource(imgs.getResourceId(aProfile.activity,  -1));
@@ -126,9 +123,11 @@ public class AListAdapter<T> extends ArrayAdapter<T>{
 					
 					int position = (int)buttonView.getTag();
 					ProfileInfo pi = (ProfileInfo)getItem(position);
+					pi.allowDisturbing = isChecked?1:2;
 					Log.v(TAG, "onCheckedChanged pi.id="+pi.id+", isChecked="+isChecked);
 					
 					Bundle bd = new Bundle();
+					bd.putString(com.exercise.together.util.Constants.KEY.POSITION, String.valueOf(position));
 					bd.putString(com.exercise.together.util.Constants.KEY.ID, String.valueOf(pi.id));
 					bd.putString(com.exercise.together.util.Constants.KEY.ALLOW_DISTURB, String.valueOf(isChecked?1:2));
 					//Log.v(TAG, "pi.id="+pi.id);
@@ -151,6 +150,9 @@ public class AListAdapter<T> extends ArrayAdapter<T>{
 		Switch sw1;
 	}
 
+	public T getListItem(int pos){
+		return mItems.get(pos);
+	}
 }
 
 

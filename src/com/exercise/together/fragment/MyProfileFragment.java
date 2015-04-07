@@ -25,6 +25,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -32,6 +33,7 @@ import android.widget.Toast;
 
 import com.exercise.together.MainActivity;
 import com.exercise.together.MyProfileEditActivity;
+import com.exercise.together.ProfileDetailActivity;
 import com.exercise.together.R;
 import com.exercise.together.adapter.AListAdapter;
 import com.exercise.together.util.Constants;
@@ -40,7 +42,7 @@ import com.exercise.together.util.ProfileRegistration;
 import com.exercise.together.util.ProfileRegistration.ProfileListener;
 import com.exercise.together.util.ProfileRegistration.Wrapper;
 
-public class MyProfileFragment extends Fragment implements ProfileListener {
+public class MyProfileFragment extends Fragment implements ProfileListener, OnItemClickListener {
 	
 	private static final String TAG = "MyProfileFragment";
 	ArrayList<ProfileInfo> mProfiles;
@@ -78,8 +80,9 @@ public class MyProfileFragment extends Fragment implements ProfileListener {
 		mListAdapter = new AListAdapter<ProfileInfo>(getActivity(), R.layout.list_layout, mProfiles, mRegiHelper);
 		
 		mListview.setAdapter(mListAdapter);
+		mListview.setOnItemClickListener(this);
 		registerForContextMenu(mListview);
-		
+		Log.v(TAG, "mListview="+mListview);
 		final SharedPreferences prefs = getActivity().getSharedPreferences(MainActivity.class.getSimpleName(), Context.MODE_PRIVATE);
 		boolean done = prefs.getBoolean(Constants.KEY.DONE_REGISTRATION, false);
 	    Log.v(TAG, "done="+done);
@@ -87,6 +90,8 @@ public class MyProfileFragment extends Fragment implements ProfileListener {
 	    	String regid = prefs.getString(Constants.KEY.REGID, "");
 	    	mRegiHelper.getProfileAsync(regid);//onLoadedProfile에서 listview로 바인딩함.
 	        
+		}else{
+			mRegiHelper.getRegidServerAsync();
 		}
 		/*lv.setOnItemLongClickListener(new OnItemLongClickListener() {
 
@@ -130,6 +135,19 @@ public class MyProfileFragment extends Fragment implements ProfileListener {
 	}
 
 	@Override
+	public void onItemClick(AdapterView<?> parent, View view, int position,
+			long id) {
+		// TODO Auto-generated method stub
+		Log.v(TAG, "parent="+parent+", view="+view);
+		ProfileInfo pi = (ProfileInfo)parent.getAdapter().getItem(position);
+		
+		Intent i = new Intent(getActivity(), ProfileDetailActivity.class);
+		i.putExtra(Constants.KEY.PROFILE_INFO, pi);
+		startActivity(i);
+		
+	}
+	
+	@Override
 	public boolean onContextItemSelected(MenuItem item) {
 		// TODO Auto-generated method stub
 		AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
@@ -165,7 +183,6 @@ public class MyProfileFragment extends Fragment implements ProfileListener {
 		for(ProfileInfo pi : mProfiles){
 			mListAdapter.add(pi);
 		}
-		
 		TextView emptyView = (TextView)getActivity().findViewById(R.id.fragment_list_lv_empty);
 		emptyView.setText(R.string.profileEmpty);
 		mListview.setEmptyView(emptyView);
@@ -219,7 +236,7 @@ public class MyProfileFragment extends Fragment implements ProfileListener {
 			// TODO Auto-generated method stub
 			super.handleMessage(msg);
 			Log.v(TAG, "handler");
-			mListAdapter.notifyDataSetChanged();
+			//mListAdapter.notifyDataSetChanged();
 			
 		}
 	};
@@ -227,7 +244,17 @@ public class MyProfileFragment extends Fragment implements ProfileListener {
 	@Override
 	public void onResultProfileUpdate(Wrapper wrapper) {
 		// TODO Auto-generated method stub
-		
+		//mListAdapter.notifyDataSetChanged();
+		if(wrapper.responseCode == HttpStatus.SC_OK){
+			ProfileInfo pi = (ProfileInfo)mListAdapter.getListItem(Integer.parseInt(wrapper.position));
+			Log.v(TAG, "onResultProfileUpdate pi.allow="+pi.allowDisturbing);
+			//pi.allowDisturbing = Integer.parseInt(wrapper.position);
+			//mListAdapter
+			//mListAdapter.notifyDataSetChanged();
+		}
+		Log.v(TAG, "onResultProfileUpdate wrapper.allow="+wrapper.allow_diturbing);
 		Toast.makeText(getActivity(), wrapper.responseString, Toast.LENGTH_SHORT).show();
 	}
+
+
 }

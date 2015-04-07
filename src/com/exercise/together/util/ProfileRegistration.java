@@ -135,6 +135,7 @@ public class ProfileRegistration {
 				// TODO Auto-generated method stub
 				super.onPostExecute(regid);
 				mListener.onResultRegidServer(regid);
+				getProfileAsync(regid);
 			}
 
 		}.execute();
@@ -479,7 +480,8 @@ public class ProfileRegistration {
             	Wrapper wrapper = new Wrapper();
             	wrapper.responseCode = responseCode;
             	wrapper.responseString = responseString;
-            	
+            	wrapper.position = params[0].getString(Constants.KEY.POSITION);
+            	wrapper.allow_diturbing = params[0].getString(Constants.KEY.ALLOW_DISTURB);
             	return wrapper;
 			}
 			
@@ -496,6 +498,9 @@ public class ProfileRegistration {
 	public class Wrapper{
 		public int responseCode;
 		public String responseString;
+	
+		public String position;
+		public String allow_diturbing;
 	}
 	
 }

@@ -19,45 +19,57 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
             
+            <TextView
+			    android:layout_width="wrap_content"
+			    android:layout_height="wrap_content"
+			    android:textSize="30sp"
+			    android:text="프로파일 만들기"
+			/>
+            
             <!-- 종목 -->
         	<LinearLayout
 	            android:layout_width="match_parent"
 	            android:layout_height="match_parent"
 	            android:orientation="horizontal"
-	            android:layout_marginTop="10dp" >
+	            android:layout_marginTop="30dp" >
 	            <TextView
 				    android:id="@+id/tv_sports_title"
 				    android:layout_width="wrap_content"
 				    android:layout_height="wrap_content"
-				    android:text="운동종목"/>
+				    android:textSize="20sp"
+			        android:text="운동종목"/>
 			    <TextView
 				    android:layout_width="wrap_content"
 				    android:layout_height="wrap_content"
 				    android:textColor="#FF0000"
-				    android:layout_marginLeft="5dp"
-				    android:text="(필수사항)"/>
+				    android:textSize="15sp"
+			        android:text="(필수사항)"/>
 		    </LinearLayout>
 		    <Spinner
 		        android:id="@+id/spn_sports"
-		        android:layout_width="wrap_content"
-		        android:layout_height="wrap_content"/>
+		        android:layout_width="match_parent"
+		        android:layout_height="wrap_content"
+		        android:layout_marginLeft="25dp"
+				android:textSize="20sp"
+			    />
 		
 			<!-- 이름 -->
         	<LinearLayout
 	            android:layout_width="match_parent"
 	            android:layout_height="match_parent"
 	            android:orientation="horizontal"
-			    android:layout_marginTop="10dp" >
+			    android:layout_marginTop="15dp" >
 	            <TextView
 			        android:id="@+id/tv_name_title"
 			        android:layout_width="wrap_content"
 			        android:layout_height="wrap_content"
+			        android:textSize="20sp"
 			        android:text="닉네임"/>
 			    <TextView
 				    android:layout_width="wrap_content"
 				    android:layout_height="wrap_content"
 				    android:textColor="#FF0000"
-				    android:layout_marginLeft="5dp"
+				    android:textSize="15sp"
 				    android:text="(필수사항)"/>
 		    </LinearLayout>
 		    <EditText
@@ -65,78 +77,88 @@
 		        android:layout_width="match_parent"
 		        android:layout_height="wrap_content"
 		        android:ems="10"
-		        android:textAppearance="?android:attr/textAppearanceMedium">
-		        <requestFocus />
+		        android:textSize="20sp"
+		        android:layout_marginLeft="25dp">
+		        
 		    </EditText>
-			    		    
+			    <!-- <requestFocus /> -->		    
 			<!-- 성별 -->
         	<LinearLayout
 	            android:layout_width="match_parent"
 	            android:layout_height="match_parent"
 	            android:orientation="horizontal"
-			    android:layout_marginTop="10dp" >
+			    android:layout_marginTop="15dp" >
 	            <TextView
 			        android:id="@+id/tv_gender_title"
 			        android:layout_width="wrap_content"
 			        android:layout_height="wrap_content"
+			        android:textSize="20sp"
 			        android:text="성별"/>
 			    <TextView
 				    android:layout_width="wrap_content"
 				    android:layout_height="wrap_content"
 				    android:textColor="#FF0000"
-				    android:layout_marginLeft="5dp"
+				    android:textSize="15sp"
 				    android:text="(필수사항)"/>
 		    </LinearLayout>
 		    <Spinner
 		        android:id="@+id/spn_gender"
-		        android:layout_width="wrap_content"
-		        android:layout_height="wrap_content"/>
+		        android:layout_width="match_parent"
+		        android:layout_height="wrap_content"
+		        android:layout_marginLeft="25dp"
+		        android:textSize="20sp"/>
 		    		
 		    <!-- 나이 -->
         	<LinearLayout
 	            android:layout_width="match_parent"
 	            android:layout_height="match_parent"
 	            android:orientation="horizontal" 
-				android:layout_marginTop="10dp" >
+				android:layout_marginTop="15dp" >
 	            <TextView
 			        android:id="@+id/tv_age_title"
 			        android:layout_width="wrap_content"
 			        android:layout_height="wrap_content"
+			        android:textSize="20sp"
 			        android:text="나이"/>
 			    <TextView
 				    android:layout_width="wrap_content"
 				    android:layout_height="wrap_content"
 				    android:textColor="#FF0000"
-				    android:layout_marginLeft="5dp"
+				    android:textSize="15sp"
 				    android:text="(필수사항)"/>
 		    </LinearLayout>
 			<Spinner
 		        android:id="@+id/spn_age"
-		        android:layout_width="wrap_content"
-		        android:layout_height="wrap_content"/>
+		        android:layout_width="match_parent"
+		        android:layout_height="wrap_content"
+		        android:layout_marginLeft="25dp"
+		        android:textSize="20sp"/>
 		    		    
 		    <!-- 위치 -->
         	<LinearLayout
 	            android:layout_width="match_parent"
 	            android:layout_height="match_parent"
 	            android:orientation="horizontal" 
-			    android:layout_marginTop="10dp" >
+			    android:layout_marginTop="15dp" >
 	            <TextView
 			        android:id="@+id/tv_location_title"
 			        android:layout_width="wrap_content"
 			        android:layout_height="wrap_content"
+			        android:textSize="20sp"
 			        android:text="위치"/>
 			    <TextView
 				    android:layout_width="wrap_content"
 				    android:layout_height="wrap_content"
 				    android:textColor="#FF0000"
-				    android:layout_marginLeft="5dp"
+				    android:textSize="15sp"
 				    android:text="(필수사항)"/>
 		    </LinearLayout>
 		    <Spinner
 		        android:id="@+id/spn_location"
-		        android:layout_width="wrap_content"
-		        android:layout_height="wrap_content"/>
+		        android:layout_width="match_parent"
+		        android:layout_height="wrap_content"
+		        android:layout_marginLeft="25dp"
+		        android:textSize="20sp"/>
 		    		    
 		    <!-- 전화번호 -->
 		    <TextView
@@ -144,13 +166,16 @@
 		        android:layout_width="wrap_content"
 		        android:layout_height="wrap_content"
 		        android:text="전화번호"
-		        android:layout_marginTop="10dp" />
+		        android:textSize="20sp"
+		        android:layout_marginTop="15dp" />
 		    <EditText
 		        android:id="@+id/et_phone"
 		        android:layout_width="match_parent"
 		        android:layout_height="wrap_content"
 		        android:ems="10"
-		        android:textAppearance="?android:attr/textAppearanceMedium">
+		        android:layout_marginLeft="25dp"
+		        android:textSize="20sp"
+		        >
 		    </EditText>
 		
 		    <!-- 이메일 -->
@@ -159,14 +184,17 @@
 		        android:layout_width="wrap_content"
 		        android:layout_height="wrap_content"
 		        android:text="이메일"
-			    android:layout_marginTop="10dp" />
+		        android:textSize="20sp"
+			    android:layout_marginTop="15dp" />
 		    
 		    <EditText
 		        android:id="@+id/et_email"
 		        android:layout_width="match_parent"
 		        android:layout_height="wrap_content"
 		        android:ems="10"
-		        android:textAppearance="?android:attr/textAppearanceMedium">
+		        android:layout_marginLeft="25dp"
+		        android:textSize="20sp"
+		        >
 		    </EditText>
 		    
 		    <!-- 시작시간-->
@@ -175,34 +203,43 @@
 		        android:layout_width="wrap_content"
 		        android:layout_height="wrap_content"
 		        android:text="시작시간"
-		        android:layout_marginTop="10dp" />
+		        android:textSize="20sp"
+		        android:layout_marginTop="15dp" />
 		    <Spinner
 		        android:id="@+id/spn_fromhour"
-		        android:layout_width="wrap_content"
-		        android:layout_height="wrap_content"/>
+		        android:layout_width="match_parent"
+		        android:layout_height="wrap_content"
+		        android:layout_marginLeft="25dp"
+		        android:textSize="20sp"/>
 		        <!-- 종료시간 -->
 			<TextView
 		        android:id="@+id/tv_tohour_title"
 		        android:layout_width="wrap_content"
 		        android:layout_height="wrap_content"
 		        android:text="종료시간"
-		        android:layout_marginTop="10dp" />
+		        android:textSize="20sp"
+		        android:layout_marginTop="15dp" />
 		    <Spinner
 		        android:id="@+id/spn_tohour"
-		        android:layout_width="wrap_content"
-		        android:layout_height="wrap_content"/>
+		        android:layout_width="match_parent"
+		        android:layout_height="wrap_content"
+		        android:layout_marginLeft="25dp"
+		        android:textSize="20sp"/>
 		
 			<TextView
 		        android:id="@+id/tv_allow_title"
 		        android:layout_width="wrap_content"
 		        android:layout_height="wrap_content"
 		        android:text="알림 받기"
-		        android:layout_marginTop="10dp" />
+		        android:textSize="20sp"
+		        android:layout_marginTop="15dp" />
 		    <Switch
 		        android:id="@+id/sw_allow"
 		        android:layout_width="wrap_content"
 		        android:layout_height="wrap_content"
-		        android:text="알림" />
+		        android:text="알림"
+		        android:layout_marginLeft="25dp"
+		        android:textSize="15sp" />
 		    
         </LinearLayout>
     </ScrollView>

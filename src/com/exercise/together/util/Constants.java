@@ -77,6 +77,8 @@ public final class Constants {
 	    public static final String ALLOW_DISTURB = "allow_disturbing";
 	    
 	    public static final String APP_VERSION = "appVersion";
+	    public static final String PROFILE_INFO = "profile_info";
+	    public static final String POSITION = "position";
 	    
 	}
     
