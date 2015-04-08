@@ -13,8 +13,13 @@ public class ProfileInfo extends Bean
 	public String name;
     /* gender 0 : man, 1 : woman*/
     public int gender;
+    public int gender_filter;
     /* age */
     public int age;
+    public int age_filter;
+    /* level */
+    public int level;
+    public int level_filter;
     /* phone number */
     public String phoneNumber;
     /* email */
@@ -23,9 +28,11 @@ public class ProfileInfo extends Bean
     public int activity;
     
     public String location;
+    public int location_filter;
     
     public int hoursFrom;
     public int hoursTo;
+    public int time_filter;
     public int allowDisturbing;
     
     ProfileInfo(Builder builder){

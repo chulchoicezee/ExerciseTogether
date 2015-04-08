@@ -64,18 +64,24 @@ public final class Constants {
 		public static final String EXTRA_MESSAGE = "message";
 		public static final String ID = "id";
 	    public static final String REGID = "regid";
-	    public static final String DONE_REGISTRATION = "done_registration";
 	    public static final String NAME = "name";
 	    public static final String SPORTS = "favorite_sports";
 	    public static final String GENDER = "gender";
+	    public static final String GENDER_FILTER = "gender_filter";
 	    public static final String AGE = "age";
+	    public static final String AGE_FILTER = "age_filter";
+	    public static final String LEVEL = "level";
+	    public static final String LEVEL_FILTER = "level_filter";
 	    public static final String PHONE = "phone";
 	    public static final String EMAIL = "email";
 	    public static final String LOCATION = "location";
+	    public static final String LOCATION_FILTER = "location_filter";
 	    public static final String FROM_HOUR = "from_when";
 	    public static final String TO_HOUR = "to_when";
+	    public static final String TIME_FILTER = "time_filter";
 	    public static final String ALLOW_DISTURB = "allow_disturbing";
 	    
+	    public static final String DONE_REGISTRATION = "done_registration";
 	    public static final String APP_VERSION = "appVersion";
 	    public static final String PROFILE_INFO = "profile_info";
 	    public static final String POSITION = "position";

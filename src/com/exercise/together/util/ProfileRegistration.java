@@ -25,7 +25,6 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.database.CursorJoiner.Result;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -48,7 +47,12 @@ public class ProfileRegistration {
     	void onResultProfileDelete(Wrapper wrapper);
     	void onResultProfileUpdate(Wrapper wrapper);
     };
+    public interface FriendListener{
+    	void onLoadedFriend(ArrayList<ProfileInfo> aList);
+    	
+    }
     ProfileListener mListener;
+    FriendListener mFreindListener;
     /**
      * Substitute you own sender ID here. This is the project number you got
      * from the API Console, as described in "Getting Started."
@@ -60,6 +64,9 @@ public class ProfileRegistration {
 	}
 	public void setProfileListener(ProfileListener pl){
 		mListener = pl;
+	}
+	public void setFriendListener(FriendListener fl){
+		mFreindListener = fl;
 	}
 	
 	/**
@@ -493,6 +500,135 @@ public class ProfileRegistration {
 				mListener.onResultProfileUpdate(wrapper);
 			}
 		}.execute(bd);
+	}
+	
+	public void getFriendsAsync(ProfileInfo pi){
+
+		new AsyncTask<ProfileInfo, Void, String>(){
+
+	    	int responseCode = 0;
+	    	ProgressDialog pd;
+
+        	@Override
+			protected void onPreExecute() {
+				// TODO Auto-generated method stub
+				super.onPreExecute();
+				pd = new ProgressDialog(mContext);
+            	pd.setMessage("getting profile from server");
+            	pd.show();
+            	Log.v(TAG, "onPreExecute");
+            }
+
+			@Override
+			protected String doInBackground(ProfileInfo... params) {
+				// TODO Auto-generated method stub
+				Log.v(TAG, "doInBackground");
+            	HttpClient client = new DefaultHttpClient();
+            	HttpPost httpPost = new HttpPost("http://chulchoice.cafe24app.com/friends/get/");
+            	Log.v(TAG, "params[0]="+params[0]);
+            	HttpResponse response = null;
+            	String responseString = null;
+            	
+            	List<NameValuePair> nameValuePair = new ArrayList<NameValuePair>(6);
+            	nameValuePair.add(new BasicNameValuePair(Constants.KEY.REGID, params[0].regid));	
+            	nameValuePair.add(new BasicNameValuePair(Constants.KEY.GENDER_FILTER, String.valueOf(params[0].gender_filter)));	
+            	nameValuePair.add(new BasicNameValuePair(Constants.KEY.AGE_FILTER, String.valueOf(params[0].age_filter)));	
+            	nameValuePair.add(new BasicNameValuePair(Constants.KEY.LEVEL_FILTER, String.valueOf(params[0].level_filter)));	
+            	nameValuePair.add(new BasicNameValuePair(Constants.KEY.LOCATION_FILTER, String.valueOf(params[0].location_filter)));	
+            	nameValuePair.add(new BasicNameValuePair(Constants.KEY.TIME_FILTER, String.valueOf(params[0].time_filter)));	
+
+            	try {
+            		httpPost.setEntity(new UrlEncodedFormEntity(nameValuePair, "utf-8"));
+					
+        			response = client.execute(httpPost);
+        			responseCode = response.getStatusLine().getStatusCode();
+					Log.v(TAG, "responseCode="+responseCode);
+					ByteArrayOutputStream out = new ByteArrayOutputStream();
+					response.getEntity().writeTo(out);
+					responseString = out.toString();
+					out.close();
+        		} catch (UnsupportedEncodingException e) 
+            	{
+            	     e.printStackTrace();
+            	} catch (ClientProtocolException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+            	
+            	return responseString;
+			}
+
+			@Override
+			protected void onPostExecute(String responseString) {
+				// TODO Auto-generated method stub
+				super.onPostExecute(responseString);
+				
+				Log.v(TAG, "onPostExecute responseString="+responseString);
+				
+				if(pd != null)
+					pd.dismiss();
+				
+				ArrayList<ProfileInfo> alist = new ArrayList<ProfileInfo>();
+		        
+				if(responseString != null){
+            		Log.d(TAG, "Http Post responseString : "+responseString);
+            		try {
+						JSONArray root = new JSONArray(responseString);
+						Log.v(TAG, "root="+root);
+						Log.v(TAG, "root.length="+root.length());
+						for(int i=0; i<root.length(); i++){
+							JSONObject jo = root.getJSONObject(i);
+							Log.v(TAG, "jo="+jo);
+							if(jo != null){
+								int id = jo.getInt(Constants.KEY.ID);
+								String regid = jo.getString(Constants.KEY.REGID);
+								String name = jo.getString(Constants.KEY.NAME);
+								int gender = jo.getInt(Constants.KEY.GENDER);
+								int age = jo.getInt(Constants.KEY.AGE);
+								int activity = jo.getInt(Constants.KEY.SPORTS);
+						        String phone = jo.getString(Constants.KEY.PHONE);
+						        String email = jo.getString(Constants.KEY.EMAIL);
+						        String location = jo.getString(Constants.KEY.LOCATION);
+						        int hoursFrom = jo.getInt(Constants.KEY.FROM_HOUR);
+						        int hoursTo = jo.getInt(Constants.KEY.TO_HOUR);
+						        int allowDisturbing = jo.getInt(Constants.KEY.ALLOW_DISTURB);
+						        
+						        Log.v(TAG, "regid="+regid);
+						        Log.v(TAG, "name="+name+", gender="+gender+", age="+age+", activity="+activity);
+						        Log.v(TAG, "phone="+phone+", email="+email+", location="+location+", hoursFrom="+hoursFrom+", hoursTo="+hoursTo+", allowDisturbing="+allowDisturbing);
+						        
+						        ProfileInfo pi = new ProfileInfo.Builder()
+									.setid(id)
+									.setRegid(regid)
+				        			.setName(name)
+				        			.setActivity(activity)
+					        		.setGender(gender)
+					        		.setAge(age)
+					        		.setLocation(location)
+					        		.setPhonenumber(phone)
+					        		.setEmail(email)
+					        		.setHoursFrom(hoursFrom)
+					        		.setHoursTo(hoursTo)
+					        		.setAllowDisturbing(allowDisturbing)
+					        		.build();
+								
+								alist.add(pi);
+							}
+						}
+						//rootObj.getJSONObject("");
+					} catch (JSONException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+            	}
+				
+				mFreindListener.onLoadedFriend(alist);
+			}
+    		
+    	}.execute(pi);
 	}
 	
 	public class Wrapper{
