@@ -53,6 +53,7 @@ import android.widget.Toast;
 
 import com.exercise.together.adapter.NavDrawerListAdapter;
 import com.exercise.together.fragment.MyProfileFragment;
+import com.exercise.together.fragment.ProfileListFragment;
 import com.exercise.together.fragment.SettingFragment;
 import com.exercise.together.fragment.SportsMainFragment;
 import com.exercise.together.model.NavDrawerItem;
@@ -116,7 +117,7 @@ public class MainActivity extends Activity implements Callback {
 				case MENU.MY_PROFILE:
 					ArrayList<ProfileInfo> profiles = new ArrayList<ProfileInfo>();
 					
-					fragment = new MyProfileFragment(profiles);
+					fragment = new ProfileListFragment(profiles);
 					break;
 				case MENU.BADMINTON:
 					fragment = new SportsMainFragment();

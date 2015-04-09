@@ -27,7 +27,7 @@ import com.exercise.together.util.ProfileRegistration;
 import com.exercise.together.util.ProfileRegistration.ProfileListener;
 import com.exercise.together.util.ProfileRegistration.Wrapper;
 
-public class MyProfileEditActivity extends Activity implements OnItemSelectedListener, ProfileListener{
+public class ProfileEditActivity extends Activity implements OnItemSelectedListener, ProfileListener{
 
 	ArrayAdapter<CharSequence> adpSports, adpGender, adpAge, adpLocation, adpFromHour, adpToHour;
 	public static final int OPTION = Menu.FIRST+1;

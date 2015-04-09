@@ -531,11 +531,17 @@ public class ProfileRegistration {
             	
             	List<NameValuePair> nameValuePair = new ArrayList<NameValuePair>(6);
             	nameValuePair.add(new BasicNameValuePair(Constants.KEY.REGID, params[0].regid));	
+            	nameValuePair.add(new BasicNameValuePair(Constants.KEY.GENDER, String.valueOf(params[0].gender)));	
             	nameValuePair.add(new BasicNameValuePair(Constants.KEY.GENDER_FILTER, String.valueOf(params[0].gender_filter)));	
+            	nameValuePair.add(new BasicNameValuePair(Constants.KEY.AGE, String.valueOf(params[0].age)));	
             	nameValuePair.add(new BasicNameValuePair(Constants.KEY.AGE_FILTER, String.valueOf(params[0].age_filter)));	
+            	nameValuePair.add(new BasicNameValuePair(Constants.KEY.LEVEL, String.valueOf(params[0].level)));	
             	nameValuePair.add(new BasicNameValuePair(Constants.KEY.LEVEL_FILTER, String.valueOf(params[0].level_filter)));	
+            	nameValuePair.add(new BasicNameValuePair(Constants.KEY.LOCATION, String.valueOf(params[0].location)));	
             	nameValuePair.add(new BasicNameValuePair(Constants.KEY.LOCATION_FILTER, String.valueOf(params[0].location_filter)));	
             	nameValuePair.add(new BasicNameValuePair(Constants.KEY.TIME_FILTER, String.valueOf(params[0].time_filter)));	
+            	nameValuePair.add(new BasicNameValuePair(Constants.KEY.FROM_HOUR, String.valueOf(params[0].hoursFrom)));	
+            	nameValuePair.add(new BasicNameValuePair(Constants.KEY.TO_HOUR, String.valueOf(params[0].hoursTo)));	
 
             	try {
             		httpPost.setEntity(new UrlEncodedFormEntity(nameValuePair, "utf-8"));

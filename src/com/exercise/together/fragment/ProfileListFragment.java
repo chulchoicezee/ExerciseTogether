@@ -5,8 +5,6 @@ import java.util.ArrayList;
 import org.apache.http.HttpStatus;
 
 import android.app.Fragment;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -26,14 +24,13 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.exercise.together.MainActivity;
-import com.exercise.together.MyProfileEditActivity;
 import com.exercise.together.ProfileDetailActivity;
+import com.exercise.together.ProfileEditActivity;
 import com.exercise.together.R;
 import com.exercise.together.adapter.AListAdapter;
 import com.exercise.together.util.Constants;
@@ -42,7 +39,7 @@ import com.exercise.together.util.ProfileRegistration;
 import com.exercise.together.util.ProfileRegistration.ProfileListener;
 import com.exercise.together.util.ProfileRegistration.Wrapper;
 
-public class MyProfileFragment extends Fragment implements ProfileListener, OnItemClickListener {
+public class ProfileListFragment extends Fragment implements ProfileListener, OnItemClickListener {
 	
 	private static final String TAG = "MyProfileFragment";
 	ArrayList<ProfileInfo> mProfiles;
@@ -51,7 +48,7 @@ public class MyProfileFragment extends Fragment implements ProfileListener, OnIt
 	ListView mListview = null;
 	ProgressDialog mPd = null;
 	
-	public MyProfileFragment(ArrayList<ProfileInfo> profiles){
+	public ProfileListFragment(ArrayList<ProfileInfo> profiles){
 		mProfiles = profiles;
 	}
 	
@@ -125,7 +122,7 @@ public class MyProfileFragment extends Fragment implements ProfileListener, OnIt
 	        case R.id.create :
 	            String message = "create is selected";
 	            Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
-	            Intent i = new Intent(getActivity().getApplicationContext(), MyProfileEditActivity.class);
+	            Intent i = new Intent(getActivity().getApplicationContext(), ProfileEditActivity.class);
 	            startActivity(i);
 	            break;
 	        }
