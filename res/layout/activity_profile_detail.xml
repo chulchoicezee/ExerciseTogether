@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+	android:orientation="vertical"
+	android:layout_margin="10dp"
+	>
+	
+    <ScrollView
+        android:id="@+id/scrollView1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            >
+            
+            <TextView
+			    android:id="@+id/proDetail_tv_sports"
+			    android:layout_width="wrap_content"
+			    android:layout_height="wrap_content"
+			    android:textSize="30sp"
+				    />
+            
+			<LinearLayout
+	            android:layout_width="match_parent"
+	            android:layout_height="match_parent"
+	            android:orientation="horizontal"
+	            android:layout_marginTop="10dp" 
+	            >
+	            <ImageView
+				    android:id="@+id/proDetail_iv_photo"
+				    android:layout_width="110dp"
+				    android:layout_height="110dp"
+				    android:layout_gravity="center_vertical"
+				    android:src="@drawable/ic_person_icon" />
+			    
+	            <TextView
+				    android:id="@+id/proDetail_tv_name"
+				    android:layout_width="wrap_content"
+				    android:layout_height="wrap_content"
+				    android:layout_marginLeft="20dp"
+				    android:layout_gravity="center_vertical"
+				    android:textSize="25sp"/>
+		    </LinearLayout>
+			
+		    <!-- gender -->
+        	<LinearLayout
+	            android:layout_width="match_parent"
+	            android:layout_height="match_parent"
+	            android:orientation="horizontal"
+			    android:layout_marginTop="10dp" >
+	            <TextView
+			        android:layout_width="wrap_content"
+			        android:layout_height="wrap_content"
+			        android:textSize="20sp"
+			        android:text="성별 : "/>
+			    <TextView
+				    android:id="@+id/proDetail_tv_gender"
+				    android:layout_width="wrap_content"
+				    android:layout_height="wrap_content"
+				    android:layout_marginLeft="5dp"
+				    android:textSize="20sp"
+			        />
+		    </LinearLayout>
+
+        	  
+		    <!-- age -->
+        	<LinearLayout
+	            android:layout_width="match_parent"
+	            android:layout_height="match_parent"
+	            android:orientation="horizontal"
+			    android:layout_marginTop="10dp" >
+	            <TextView
+			        android:layout_width="wrap_content"
+			        android:layout_height="wrap_content"
+			        android:textSize="20sp"
+			        android:text="연령대 : "/>
+			    <TextView
+				    android:id="@+id/proDetail_tv_age"
+				    android:layout_width="wrap_content"
+				    android:layout_height="wrap_content"
+				    android:textSize="20sp"
+			        android:layout_marginLeft="5dp"
+				    />
+		    </LinearLayout>
+		    		
+		    <!-- level -->
+        	<LinearLayout
+	            android:layout_width="match_parent"
+	            android:layout_height="match_parent"
+	            android:orientation="horizontal"
+			    android:layout_marginTop="10dp" >
+	            <TextView
+			        android:layout_width="wrap_content"
+			        android:layout_height="wrap_content"
+			        android:textSize="20sp"
+			        android:text="레벨 : "/>
+			    <TextView
+				    android:id="@+id/proDetail_tv_level"
+				    android:layout_width="wrap_content"
+				    android:layout_height="wrap_content"
+				    android:textSize="20sp"
+			        android:layout_marginLeft="5dp"
+				    />
+		    </LinearLayout>
+
+		    <!-- location -->
+        	<LinearLayout
+	            android:layout_width="match_parent"
+	            android:layout_height="match_parent"
+	            android:orientation="horizontal"
+			    android:layout_marginTop="10dp" >
+	            <TextView
+			        android:layout_width="wrap_content"
+			        android:layout_height="wrap_content"
+			        android:textSize="20sp"
+			        android:text="지역 : "/>
+			    <TextView
+				    android:id="@+id/proDetail_tv_location"
+				    android:layout_width="wrap_content"
+				    android:layout_height="wrap_content"
+				    android:textSize="20sp"
+			        android:layout_marginLeft="5dp"
+				    />
+		    </LinearLayout>        	
+        			    		    
+		    <!-- time -->
+        	<LinearLayout
+	            android:layout_width="match_parent"
+	            android:layout_height="match_parent"
+	            android:orientation="horizontal"
+			    android:layout_marginTop="10dp" >
+	            <TextView
+			        android:layout_width="wrap_content"
+			        android:layout_height="wrap_content"
+			        android:textSize="20sp"
+			        android:text="시간대 : "/>
+			    <TextView
+				    android:id="@+id/proDetail_tv_time"
+				    android:layout_width="wrap_content"
+				    android:layout_height="wrap_content"
+				    android:layout_marginLeft="5dp"
+				    android:textSize="20sp"
+			        />
+		    </LinearLayout>        	
+     
+		    <!-- phone -->
+        	<LinearLayout
+	            android:layout_width="match_parent"
+	            android:layout_height="match_parent"
+	            android:orientation="horizontal"
+			    android:layout_marginTop="10dp" >
+	            <TextView
+			        android:layout_width="wrap_content"
+			        android:layout_height="wrap_content"
+			        android:textSize="20sp"
+			        android:text="연락처 : "/>
+			    <TextView
+				    android:id="@+id/proDetail_tv_phone"
+				    android:layout_width="wrap_content"
+				    android:layout_height="wrap_content"
+				    android:textSize="20sp"
+			        android:layout_marginLeft="5dp"
+				    />
+		    </LinearLayout>        	
+
+		    <!-- email -->
+        	<LinearLayout
+	            android:layout_width="match_parent"
+	            android:layout_height="match_parent"
+	            android:orientation="horizontal"
+			    android:layout_marginTop="10dp" >
+	            <TextView
+			        android:layout_width="wrap_content"
+			        android:layout_height="wrap_content"
+			        android:textSize="20sp"
+			        android:text="이메일 : "/>
+			    <TextView
+				    android:id="@+id/proDetail_tv_email"
+				    android:layout_width="wrap_content"
+				    android:layout_height="wrap_content"
+				    android:textSize="20sp"
+			        android:layout_marginLeft="5dp"
+				    />
+		    </LinearLayout>        	
+        	
+		    <!-- alarm -->
+        	<LinearLayout
+	            android:layout_width="match_parent"
+	            android:layout_height="match_parent"
+	            android:orientation="horizontal"
+			    android:layout_marginTop="10dp" >
+	            <TextView
+			        android:layout_width="wrap_content"
+			        android:layout_height="wrap_content"
+			        android:textSize="20sp"
+			        android:text="알람 : "/>
+			    <TextView
+				    android:id="@+id/proDetail_tv_alarm"
+				    android:layout_width="wrap_content"
+				    android:layout_height="wrap_content"
+				    android:textSize="20sp"
+			        android:layout_marginLeft="5dp"
+				    />
+		    </LinearLayout>    		
+	    
+        </LinearLayout>
+    </ScrollView>
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        >
+        <Button
+	        android:id="@+id/proDetail_btn1"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:layout_weight="1"
+	        android:text="운동 친구 보기"
+	        />
+    </LinearLayout>
+</LinearLayout>
