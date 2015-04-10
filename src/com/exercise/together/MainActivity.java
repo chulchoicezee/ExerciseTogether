@@ -49,10 +49,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.exercise.together.adapter.NavDrawerListAdapter;
-import com.exercise.together.fragment.MyProfileFragment;
 import com.exercise.together.fragment.ProfileListFragment;
 import com.exercise.together.fragment.SettingFragment;
 import com.exercise.together.fragment.SportsMainFragment;
@@ -64,8 +62,6 @@ import com.exercise.together.util.Constants.INFO;
 import com.exercise.together.util.Constants.MENU;
 import com.exercise.together.util.ProfileInfo;
 import com.exercise.together.util.ProfileRegistration;
-import com.exercise.together.util.ProfileRegistration.ProfileListener;
-import com.exercise.together.util.ProfileRegistration.Wrapper;
 
 public class MainActivity extends Activity implements Callback {
 	protected static final String TAG = "MainActivity";

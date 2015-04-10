@@ -244,7 +244,7 @@ public class ProfileListFragment extends Fragment implements ProfileListener, On
 		//mListAdapter.notifyDataSetChanged();
 		if(wrapper.responseCode == HttpStatus.SC_OK){
 			ProfileInfo pi = (ProfileInfo)mListAdapter.getListItem(Integer.parseInt(wrapper.position));
-			Log.v(TAG, "onResultProfileUpdate pi.allow="+pi.allowDisturbing);
+			Log.v(TAG, "onResultProfileUpdate pi.allow="+pi.allow_disturbing);
 			//pi.allowDisturbing = Integer.parseInt(wrapper.position);
 			//mListAdapter
 			//mListAdapter.notifyDataSetChanged();

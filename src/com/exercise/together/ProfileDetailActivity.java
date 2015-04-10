@@ -24,11 +24,11 @@ public class ProfileDetailActivity extends Activity implements FriendListener{
 	ImageView iv_photo;
 	TextView tv_gender;
 	TextView tv_age;
-	TextView tv_level;
 	TextView tv_location;
-	TextView tv_time;
+	TextView tv_level;
 	TextView tv_phone;
 	TextView tv_email;
+	TextView tv_time;
 	TextView tv_alarm;
 	Button btn_find;
 	
@@ -64,18 +64,19 @@ public class ProfileDetailActivity extends Activity implements FriendListener{
 		String[] sports = getResources().getStringArray(R.array.activities);
 		String[] ages = getResources().getStringArray(R.array.ages);
 		String[] genders = getResources().getStringArray(R.array.genders);
+		String[] times = getResources().getStringArray(R.array.times);
 		//String[] locations = getResources().getStringArray(R.array.locations);
 		
-		tv_sports.setText(sports[pi.activity]);
+		tv_sports.setText(sports[pi.sports]);
 		tv_name.setText(pi.name);
 		tv_gender.setText(genders[pi.gender]);
 		tv_age.setText(ages[pi.age]);
 		tv_level.setText(String.valueOf(pi.age));
 		tv_location.setText(pi.location);
-		tv_time.setText(pi.hoursFrom+" ~ "+pi.hoursTo);
-		tv_phone.setText(pi.phoneNumber);
+		tv_time.setText(times[pi.time]);
+		tv_phone.setText(pi.phone);
 		tv_email.setText(pi.email);
-		tv_alarm.setText(pi.allowDisturbing==1?"ON":"OFF");
+		tv_alarm.setText(pi.allow_disturbing==1?"ON":"OFF");
 		
 		btn_find.setOnClickListener(new OnClickListener() {
 			

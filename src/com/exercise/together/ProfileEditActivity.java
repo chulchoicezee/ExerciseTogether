@@ -15,6 +15,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.EditText;
@@ -27,25 +28,37 @@ import com.exercise.together.util.ProfileRegistration;
 import com.exercise.together.util.ProfileRegistration.ProfileListener;
 import com.exercise.together.util.ProfileRegistration.Wrapper;
 
-public class ProfileEditActivity extends Activity implements OnItemSelectedListener, ProfileListener{
+public class ProfileEditActivity extends Activity implements OnItemSelectedListener, ProfileListener, OnCheckedChangeListener{
 
-	ArrayAdapter<CharSequence> adpSports, adpGender, adpAge, adpLocation, adpFromHour, adpToHour;
+	ArrayAdapter<CharSequence> adpGender, adpAge, adpSports, adpLocation, adpLevel, adpTime;
 	public static final int OPTION = Menu.FIRST+1;
 	private static final String TAG = "MyProfileEditActivity";
 	public static final String PROPERTY_REG_ID = "registration_id";
 	ProgressDialog mPd;
 	ProfileRegistration mRegiHelper = null;
-    Spinner spn_sports = null;
     EditText et_name = null;
     Spinner spn_gender = null;
     Spinner spn_age = null;
+    Spinner spn_sports = null;
     Spinner spn_location = null;
+    Spinner spn_level = null;
+    
     EditText et_phone = null;
     EditText et_email = null;
-    Spinner spn_fromHour = null;
-    Spinner spn_toHour = null;
+    Spinner spn_time = null;
     Switch sw_allowDisturb = null;
+    CheckBox cbox_gender = null;
+    CheckBox cbox_age = null;
+    CheckBox cbox_location = null;
+    CheckBox cbox_level = null;
+    CheckBox cbox_time = null;
+    
     int mAllowDisturb = 1;
+    int mGenderFilter = 1;
+    int mAgeFilter = 1;
+    int mLocationFilter = 1;
+    int mLevelFilter = 1;
+    int mTimeFilter = 1;
     
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -54,49 +67,54 @@ public class ProfileEditActivity extends Activity implements OnItemSelectedListe
 		
 		setContentView(R.layout.activity_profile_edit);
 		
-		 spn_sports = (Spinner) findViewById(R.id.spn_sports);
 		 et_name = (EditText)findViewById(R.id.et_name);
 		 spn_gender = (Spinner) findViewById(R.id.spn_gender);
+		 cbox_gender = (CheckBox) findViewById(R.id.proEdit_cb_gender);
 		 spn_age = (Spinner) findViewById(R.id.spn_age);
+		 cbox_age = (CheckBox) findViewById(R.id.proEdit_cb_age);
+		 spn_sports = (Spinner) findViewById(R.id.spn_sports);
 		 spn_location = (Spinner) findViewById(R.id.spn_location);
+		 cbox_location = (CheckBox) findViewById(R.id.proEdit_cb_location);
+		 spn_level = (Spinner) findViewById(R.id.spn_level);
+		 cbox_level = (CheckBox) findViewById(R.id.proEdit_cb_level);
 		 et_phone = (EditText)findViewById(R.id.et_phone);
 		 et_email = (EditText)findViewById(R.id.et_email);
-		 spn_fromHour = (Spinner) findViewById(R.id.spn_fromhour);
-		 spn_toHour = (Spinner) findViewById(R.id.spn_tohour);
+		 spn_time = (Spinner) findViewById(R.id.spn_time);
+		 cbox_time = (CheckBox) findViewById(R.id.proEdit_cb_time);
 		 sw_allowDisturb = (Switch) findViewById(R.id.sw_allow);
 		 
-		 adpSports = ArrayAdapter.createFromResource(this, R.array.activities, android.R.layout.simple_spinner_item);
-		 adpSports.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-	     spn_sports.setAdapter(adpSports);
-	     spn_sports.setOnItemSelectedListener(this);
-		 
-	     adpGender = ArrayAdapter.createFromResource(this, R.array.genders, android.R.layout.simple_spinner_item);
-	     adpGender.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		 adpGender = ArrayAdapter.createFromResource(this, R.array.genders, android.R.layout.simple_spinner_item);
+		 adpGender.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		 spn_gender.setAdapter(adpGender);
 		 spn_gender.setOnItemSelectedListener(this);
 		 
 		 adpAge = ArrayAdapter.createFromResource(this, R.array.ages, android.R.layout.simple_spinner_item);
-	     adpAge.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		 adpAge.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		 spn_age.setAdapter(adpAge);
 		 spn_age.setOnItemSelectedListener(this);
+		 
+		 adpSports = ArrayAdapter.createFromResource(this, R.array.activities, android.R.layout.simple_spinner_item);
+		 adpSports.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		 spn_sports.setAdapter(adpSports);
+		 spn_sports.setOnItemSelectedListener(this);
 		 
 		 adpLocation = ArrayAdapter.createFromResource(this, R.array.locations, android.R.layout.simple_spinner_item);
 		 adpLocation.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		 spn_location.setAdapter(adpLocation);
 		 spn_location.setOnItemSelectedListener(this);
 		 
-		 adpFromHour = ArrayAdapter.createFromResource(this, R.array.times, android.R.layout.simple_spinner_item);
-		 adpFromHour.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-		 spn_fromHour.setAdapter(adpFromHour);
-		 spn_fromHour.setOnItemSelectedListener(this);
+		 adpLevel = ArrayAdapter.createFromResource(this, R.array.levels, android.R.layout.simple_spinner_item);
+		 adpLevel.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		 spn_age.setAdapter(adpLevel);
+		 spn_age.setOnItemSelectedListener(this);
 		 
-		 adpToHour = ArrayAdapter.createFromResource(this, R.array.times, android.R.layout.simple_spinner_item);
-		 adpToHour.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-		 spn_toHour.setAdapter(adpToHour);
-		 spn_toHour.setOnItemSelectedListener(this);
+		 adpTime = ArrayAdapter.createFromResource(this, R.array.times, android.R.layout.simple_spinner_item);
+		 adpTime.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		 spn_time.setAdapter(adpTime);
+		 spn_time.setOnItemSelectedListener(this);
 		 
- 		 sw_allowDisturb.setChecked(true);
- 		 sw_allowDisturb.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+		 sw_allowDisturb.setChecked(true);
+		 sw_allowDisturb.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 			
 			@Override
 			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -104,12 +122,33 @@ public class ProfileEditActivity extends Activity implements OnItemSelectedListe
 				mAllowDisturb = isChecked?1:2;
 			}
 		});
-
+		 
+		 cbox_gender.setOnCheckedChangeListener(this);
+		 cbox_age.setOnCheckedChangeListener(this);
+		 cbox_location.setOnCheckedChangeListener(this);
+		 cbox_level.setOnCheckedChangeListener(this);
+		 cbox_time.setOnCheckedChangeListener(this);
 		 
  		mRegiHelper = new ProfileRegistration(this);
  		mRegiHelper.setProfileListener(this);
 	}
 
+	@Override
+	public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+		// TODO Auto-generated method stub
+		if(buttonView.getId() == R.id.proEdit_cb_gender){
+			mGenderFilter = isChecked?1:0;
+		}else if(buttonView.getId() == R.id.proEdit_cb_age){
+			mAgeFilter = isChecked?1:0;
+		}else if(buttonView.getId() == R.id.proEdit_cb_location){
+			mLocationFilter = isChecked?1:0;
+		}else if(buttonView.getId() == R.id.proEdit_cb_level){
+			mLevelFilter = isChecked?1:0;
+		}else if(buttonView.getId() == R.id.proEdit_cb_time){
+			mTimeFilter = isChecked?1:0;
+		}
+
+	}
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// TODO Auto-generated method stub
@@ -162,30 +201,41 @@ public class ProfileEditActivity extends Activity implements OnItemSelectedListe
 		int age = spn_age.getSelectedItemPosition();
 		int sports = spn_sports.getSelectedItemPosition();
 		String location = (String)spn_location.getSelectedItem();
+		int level = spn_level.getSelectedItemPosition();
 		String phone = et_phone.getText().toString();
 		String email = et_email.getText().toString();
-		int hoursFrom = spn_fromHour.getSelectedItemPosition();
-		int hoursTo = spn_toHour.getSelectedItemPosition();
-		int allowDisturbing = mAllowDisturb;
+		int time = spn_time.getSelectedItemPosition();
+		int allow_disturbing = mAllowDisturb;
+		int gender_filter = mGenderFilter;
+		int age_filter = mAgeFilter;
+		int location_filter = mLocationFilter;
+		int level_filter = mLevelFilter;
+		int time_filter = mTimeFilter;
 		
-		Log.v(TAG, "-----registerProfileAsync regid="+regid);
-        Log.v(TAG, "name="+name+", gender="+gender+", age="+age+", sports="+sports);
-        Log.v(TAG, "phone="+phone+", email="+email+", location="+location+", hoursFrom="+hoursFrom+", hoursTo="+hoursTo+", allowDisturbing="+allowDisturbing);
+		Log.v(TAG, "regid="+regid);
+        Log.v(TAG, "name="+name+", gender="+gender+", age="+age+", sports="+sports+", location="+location+", level="+level);
+        Log.v(TAG, "phone="+phone+", email="+email+", time="+time+", allow_disturbing="+allow_disturbing);
         
-		ProfileInfo.Builder pb = new ProfileInfo.Builder();
-		pb.setRegid(regid)
+        ProfileInfo pi = new ProfileInfo.Builder()
+			.setRegid(regid)
 			.setName(name)
-			.setActivity(sports)
     		.setGender(gender)
     		.setAge(age)
+			.setSports(sports)
     		.setLocation(location)
-    		.setPhonenumber(phone)
+    		.setLevel(level)
+    		.setPhone(phone)
     		.setEmail(email)
-    		.setHoursFrom(hoursFrom)
-    		.setHoursTo(hoursTo)
-    		.setAllowDisturbing(allowDisturbing);
-    	ProfileInfo pi = pb.build();
-    		
+    		.setTime(time)
+    		.setAllowDisturbing(allow_disturbing)
+    		.setGenderFilter(gender_filter)
+    		.setAgeFilter(age_filter)
+			.setLocationFilter(location_filter)
+    		.setLevelFilter(level_filter)
+    		.setTimeFilter(time_filter)
+    		.build();
+        
+   		
 		mRegiHelper.sendProfileAsync(pi);
 	}
 	

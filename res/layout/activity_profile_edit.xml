@@ -100,6 +100,13 @@
 				    android:textColor="#FF0000"
 				    android:textSize="15sp"
 				    android:text="(필수사항)"/>
+			    <CheckBox
+        	    android:id="@+id/proEdit_cb_gender"
+        	    android:layout_width="wrap_content"
+        	    android:layout_height="wrap_content"
+        	    android:layout_gravity="center_vertical"
+        	    android:textSize="12sp"
+				    	android:text="같은 성별과 운동하고 싶어요" />
 		    </LinearLayout>
 		    <Spinner
 		        android:id="@+id/spn_gender"
@@ -126,6 +133,13 @@
 				    android:textColor="#FF0000"
 				    android:textSize="15sp"
 				    android:text="(필수사항)"/>
+			    <CheckBox
+        	    android:id="@+id/proEdit_cb_age"
+        	    android:layout_width="wrap_content"
+        	    android:layout_height="wrap_content"
+        	    android:textSize="12sp"
+				    	android:layout_gravity="center_vertical"
+        	    android:text="비슷한 나이대와 운동하고 싶어요" />
 		    </LinearLayout>
 			<Spinner
 		        android:id="@+id/spn_age"
@@ -152,6 +166,13 @@
 				    android:textColor="#FF0000"
 				    android:textSize="15sp"
 				    android:text="(필수사항)"/>
+			    <CheckBox
+        	    android:id="@+id/proEdit_cb_location"
+        	    android:layout_width="wrap_content"
+        	    android:layout_height="wrap_content"
+        	    android:textSize="12sp"
+				    	android:layout_gravity="center_vertical"
+        	    android:text="같은 동네 친구와 운동하고 싶어요" />
 		    </LinearLayout>
 		    <Spinner
 		        android:id="@+id/spn_location"
@@ -159,7 +180,39 @@
 		        android:layout_height="wrap_content"
 		        android:layout_marginLeft="25dp"
 		        android:textSize="20sp"/>
-		    		    
+		 			<!-- 레벨 -->
+        	<LinearLayout
+	            android:layout_width="match_parent"
+	            android:layout_height="match_parent"
+	            android:orientation="horizontal" 
+					android:layout_marginTop="15dp" >
+	            <TextView
+			        android:id="@+id/tv_level_title"
+			        android:layout_width="wrap_content"
+			        android:layout_height="wrap_content"
+			        android:textSize="20sp"
+			        android:text="나이"/>
+			    <TextView
+				    android:layout_width="wrap_content"
+				    android:layout_height="wrap_content"
+				    android:textColor="#FF0000"
+				    android:textSize="15sp"
+				    android:text="(필수사항)"/>
+			    <CheckBox
+        	    android:id="@+id/proEdit_cb_level"
+        	    android:layout_width="wrap_content"
+        	    android:layout_height="wrap_content"
+        	    android:textSize="12sp"
+				    	android:layout_gravity="center_vertical"
+        	    android:text="비슷한 레벨과 운동하고 싶어요" />
+		    </LinearLayout>
+			<Spinner
+		        android:id="@+id/spn_level"
+		        android:layout_width="match_parent"
+		        android:layout_height="wrap_content"
+		        android:layout_marginLeft="25dp"
+		        android:textSize="20sp"/>
+			 		    
 		    <!-- 전화번호 -->
 		    <TextView
 		        android:id="@+id/tv_phone_title"
@@ -197,30 +250,29 @@
 		        >
 		    </EditText>
 		    
-		    <!-- 시작시간-->
-			<TextView
-		        android:id="@+id/tv_fromhour_title"
-		        android:layout_width="wrap_content"
-		        android:layout_height="wrap_content"
-		        android:text="시작시간"
-		        android:textSize="20sp"
-		        android:layout_marginTop="15dp" />
+		    <!-- 시간-->
+			  <LinearLayout
+	            android:layout_width="match_parent"
+	            android:layout_height="match_parent"
+	            android:orientation="horizontal" 
+					    android:layout_marginTop="15dp" >
+			  		  <TextView
+					        android:id="@+id/tv_time_title"
+					        android:layout_width="wrap_content"
+					        android:layout_height="wrap_content"
+					        android:text="시간대"
+					        android:textSize="20sp"
+					        android:layout_marginTop="15dp" />
+					    <CheckBox
+			       	    android:id="@+id/proEdit_cb_time"
+			       	    android:layout_width="wrap_content"
+			       	    android:layout_height="wrap_content"
+			       	    android:textSize="12sp"
+				    			android:layout_gravity="center_vertical"
+        	    		android:text="비슷한 시간대 친구와 운동하고 싶어요" />
+		  	</LinearLayout>
 		    <Spinner
-		        android:id="@+id/spn_fromhour"
-		        android:layout_width="match_parent"
-		        android:layout_height="wrap_content"
-		        android:layout_marginLeft="25dp"
-		        android:textSize="20sp"/>
-		        <!-- 종료시간 -->
-			<TextView
-		        android:id="@+id/tv_tohour_title"
-		        android:layout_width="wrap_content"
-		        android:layout_height="wrap_content"
-		        android:text="종료시간"
-		        android:textSize="20sp"
-		        android:layout_marginTop="15dp" />
-		    <Spinner
-		        android:id="@+id/spn_tohour"
+		        android:id="@+id/spn_time"
 		        android:layout_width="match_parent"
 		        android:layout_height="wrap_content"
 		        android:layout_marginLeft="25dp"
