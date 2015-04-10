@@ -190,20 +190,24 @@ public class ProfileRegistration {
             	HttpResponse response = null;
 				String responseString = null;
 				
-				Log.v(TAG, "params[0].age="+params[0].age);
-				
 				List<NameValuePair> nameValuePair = new ArrayList<NameValuePair>(11);
             	nameValuePair.add(new BasicNameValuePair(Constants.KEY.REGID, params[0].regid));
             	nameValuePair.add(new BasicNameValuePair(Constants.KEY.NAME, params[0].name));
-            	nameValuePair.add(new BasicNameValuePair(Constants.KEY.SPORTS, String.valueOf(params[0].activity)));
             	nameValuePair.add(new BasicNameValuePair(Constants.KEY.GENDER, String.valueOf(params[0].gender)));
             	nameValuePair.add(new BasicNameValuePair(Constants.KEY.AGE, String.valueOf(params[0].age)));
-            	nameValuePair.add(new BasicNameValuePair(Constants.KEY.PHONE, params[0].phoneNumber));
-            	nameValuePair.add(new BasicNameValuePair(Constants.KEY.EMAIL, params[0].email));
+            	nameValuePair.add(new BasicNameValuePair(Constants.KEY.SPORTS, String.valueOf(params[0].sports)));
             	nameValuePair.add(new BasicNameValuePair(Constants.KEY.LOCATION, params[0].location));
-            	nameValuePair.add(new BasicNameValuePair(Constants.KEY.FROM_HOUR, String.valueOf(params[0].hoursFrom)));
-            	nameValuePair.add(new BasicNameValuePair(Constants.KEY.TO_HOUR, String.valueOf(params[0].hoursTo)));
-            	nameValuePair.add(new BasicNameValuePair(Constants.KEY.ALLOW_DISTURB, String.valueOf(params[0].allowDisturbing)));
+            	nameValuePair.add(new BasicNameValuePair(Constants.KEY.LEVEL, String.valueOf(params[0].level)));
+            	nameValuePair.add(new BasicNameValuePair(Constants.KEY.PHONE, params[0].phone));
+            	nameValuePair.add(new BasicNameValuePair(Constants.KEY.EMAIL, params[0].email));
+            	nameValuePair.add(new BasicNameValuePair(Constants.KEY.TIME, String.valueOf(params[0].time)));
+            	nameValuePair.add(new BasicNameValuePair(Constants.KEY.ALLOW_DISTURBING, String.valueOf(params[0].allow_disturbing)));
+            	nameValuePair.add(new BasicNameValuePair(Constants.KEY.GENDER_FILTER, String.valueOf(params[0].gender_filter)));
+            	nameValuePair.add(new BasicNameValuePair(Constants.KEY.AGE_FILTER, String.valueOf(params[0].age_filter)));
+            	nameValuePair.add(new BasicNameValuePair(Constants.KEY.LOCATION_FILTER, String.valueOf(params[0].location_filter)));
+            	nameValuePair.add(new BasicNameValuePair(Constants.KEY.LEVEL_FILTER, String.valueOf(params[0].level_filter)));
+            	nameValuePair.add(new BasicNameValuePair(Constants.KEY.TIME_FILTER, String.valueOf(params[0].time_filter)));
+            	
             	//Encoding POST data
             	try {
 					httpPost.setEntity(new UrlEncodedFormEntity(nameValuePair, "utf-8"));
@@ -324,31 +328,42 @@ public class ProfileRegistration {
 								String name = jo.getString(Constants.KEY.NAME);
 								int gender = jo.getInt(Constants.KEY.GENDER);
 								int age = jo.getInt(Constants.KEY.AGE);
-								int activity = jo.getInt(Constants.KEY.SPORTS);
-						        String phone = jo.getString(Constants.KEY.PHONE);
+								int sports = jo.getInt(Constants.KEY.SPORTS);
+								String location = jo.getString(Constants.KEY.LOCATION);
+								int level = jo.getInt(Constants.KEY.LEVEL);
+								String phone = jo.getString(Constants.KEY.PHONE);
 						        String email = jo.getString(Constants.KEY.EMAIL);
-						        String location = jo.getString(Constants.KEY.LOCATION);
-						        int hoursFrom = jo.getInt(Constants.KEY.FROM_HOUR);
-						        int hoursTo = jo.getInt(Constants.KEY.TO_HOUR);
-						        int allowDisturbing = jo.getInt(Constants.KEY.ALLOW_DISTURB);
-						        
+						        int time = jo.getInt(Constants.KEY.TIME);
+						        int allow_disturbing = jo.getInt(Constants.KEY.ALLOW_DISTURBING);
+						        int gender_filter = jo.getInt(Constants.KEY.GENDER_FILTER);
+								int age_filter = jo.getInt(Constants.KEY.AGE_FILTER);
+								int location_filter = jo.getInt(Constants.KEY.LOCATION_FILTER);
+								int level_filter = jo.getInt(Constants.KEY.LEVEL_FILTER);
+						        int time_filter = jo.getInt(Constants.KEY.TIME_FILTER);
+								
 						        Log.v(TAG, "regid="+regid);
-						        Log.v(TAG, "name="+name+", gender="+gender+", age="+age+", activity="+activity);
-						        Log.v(TAG, "phone="+phone+", email="+email+", location="+location+", hoursFrom="+hoursFrom+", hoursTo="+hoursTo+", allowDisturbing="+allowDisturbing);
+						        Log.v(TAG, "name="+name+", gender="+gender+", age="+age+", sports="+sports+", location="+location+", level="+level);
+						        Log.v(TAG, "phone="+phone+", email="+email+", time="+time+", allow_disturbing="+allow_disturbing);
+						        
 						        
 						        ProfileInfo pi = new ProfileInfo.Builder()
 									.setid(id)
 									.setRegid(regid)
 				        			.setName(name)
-				        			.setActivity(activity)
 					        		.setGender(gender)
 					        		.setAge(age)
+				        			.setSports(sports)
 					        		.setLocation(location)
-					        		.setPhonenumber(phone)
+					        		.setLevel(level)
+					        		.setPhone(phone)
 					        		.setEmail(email)
-					        		.setHoursFrom(hoursFrom)
-					        		.setHoursTo(hoursTo)
-					        		.setAllowDisturbing(allowDisturbing)
+					        		.setTime(time)
+					        		.setAllowDisturbing(allow_disturbing)
+					        		.setGenderFilter(gender_filter)
+					        		.setAgeFilter(age_filter)
+				        			.setLocationFilter(location_filter)
+					        		.setLevelFilter(level_filter)
+					        		.setTimeFilter(time_filter)
 					        		.build();
 								
 								alist.add(pi);
@@ -488,7 +503,7 @@ public class ProfileRegistration {
             	wrapper.responseCode = responseCode;
             	wrapper.responseString = responseString;
             	wrapper.position = params[0].getString(Constants.KEY.POSITION);
-            	wrapper.allow_diturbing = params[0].getString(Constants.KEY.ALLOW_DISTURB);
+            	wrapper.allow_diturbing = params[0].getString(Constants.KEY.ALLOW_DISTURBING);
             	return wrapper;
 			}
 			
@@ -532,17 +547,19 @@ public class ProfileRegistration {
             	List<NameValuePair> nameValuePair = new ArrayList<NameValuePair>(6);
             	nameValuePair.add(new BasicNameValuePair(Constants.KEY.REGID, params[0].regid));	
             	nameValuePair.add(new BasicNameValuePair(Constants.KEY.GENDER, String.valueOf(params[0].gender)));	
-            	nameValuePair.add(new BasicNameValuePair(Constants.KEY.GENDER_FILTER, String.valueOf(params[0].gender_filter)));	
             	nameValuePair.add(new BasicNameValuePair(Constants.KEY.AGE, String.valueOf(params[0].age)));	
-            	nameValuePair.add(new BasicNameValuePair(Constants.KEY.AGE_FILTER, String.valueOf(params[0].age_filter)));	
+            	nameValuePair.add(new BasicNameValuePair(Constants.KEY.SPORTS, String.valueOf(params[0].sports)));	
+            	nameValuePair.add(new BasicNameValuePair(Constants.KEY.LOCATION, params[0].location));	
             	nameValuePair.add(new BasicNameValuePair(Constants.KEY.LEVEL, String.valueOf(params[0].level)));	
+            	nameValuePair.add(new BasicNameValuePair(Constants.KEY.TIME, String.valueOf(params[0].time)));	
+            	nameValuePair.add(new BasicNameValuePair(Constants.KEY.ALLOW_DISTURBING, String.valueOf(params[0].allow_disturbing)));	
+            	
+            	nameValuePair.add(new BasicNameValuePair(Constants.KEY.GENDER_FILTER, String.valueOf(params[0].gender_filter)));	
+            	nameValuePair.add(new BasicNameValuePair(Constants.KEY.AGE_FILTER, String.valueOf(params[0].age_filter)));	
             	nameValuePair.add(new BasicNameValuePair(Constants.KEY.LEVEL_FILTER, String.valueOf(params[0].level_filter)));	
-            	nameValuePair.add(new BasicNameValuePair(Constants.KEY.LOCATION, String.valueOf(params[0].location)));	
             	nameValuePair.add(new BasicNameValuePair(Constants.KEY.LOCATION_FILTER, String.valueOf(params[0].location_filter)));	
             	nameValuePair.add(new BasicNameValuePair(Constants.KEY.TIME_FILTER, String.valueOf(params[0].time_filter)));	
-            	nameValuePair.add(new BasicNameValuePair(Constants.KEY.FROM_HOUR, String.valueOf(params[0].hoursFrom)));	
-            	nameValuePair.add(new BasicNameValuePair(Constants.KEY.TO_HOUR, String.valueOf(params[0].hoursTo)));	
-
+            	
             	try {
             		httpPost.setEntity(new UrlEncodedFormEntity(nameValuePair, "utf-8"));
 					
@@ -594,31 +611,42 @@ public class ProfileRegistration {
 								String name = jo.getString(Constants.KEY.NAME);
 								int gender = jo.getInt(Constants.KEY.GENDER);
 								int age = jo.getInt(Constants.KEY.AGE);
-								int activity = jo.getInt(Constants.KEY.SPORTS);
-						        String phone = jo.getString(Constants.KEY.PHONE);
+								int sports = jo.getInt(Constants.KEY.SPORTS);
+								String location = jo.getString(Constants.KEY.LOCATION);
+								int level = jo.getInt(Constants.KEY.LEVEL);
+								String phone = jo.getString(Constants.KEY.PHONE);
 						        String email = jo.getString(Constants.KEY.EMAIL);
-						        String location = jo.getString(Constants.KEY.LOCATION);
-						        int hoursFrom = jo.getInt(Constants.KEY.FROM_HOUR);
-						        int hoursTo = jo.getInt(Constants.KEY.TO_HOUR);
-						        int allowDisturbing = jo.getInt(Constants.KEY.ALLOW_DISTURB);
-						        
+						        int time = jo.getInt(Constants.KEY.TIME);
+						        int allow_disturbing = jo.getInt(Constants.KEY.ALLOW_DISTURBING);
+						        int gender_filter = jo.getInt(Constants.KEY.GENDER_FILTER);
+								int age_filter = jo.getInt(Constants.KEY.AGE_FILTER);
+								int location_filter = jo.getInt(Constants.KEY.LOCATION_FILTER);
+								int level_filter = jo.getInt(Constants.KEY.LEVEL_FILTER);
+						        int time_filter = jo.getInt(Constants.KEY.TIME_FILTER);
+								
 						        Log.v(TAG, "regid="+regid);
-						        Log.v(TAG, "name="+name+", gender="+gender+", age="+age+", activity="+activity);
-						        Log.v(TAG, "phone="+phone+", email="+email+", location="+location+", hoursFrom="+hoursFrom+", hoursTo="+hoursTo+", allowDisturbing="+allowDisturbing);
+						        Log.v(TAG, "name="+name+", gender="+gender+", age="+age+", sports="+sports+", location="+location+", level="+level);
+						        Log.v(TAG, "phone="+phone+", email="+email+", time="+time+", allow_disturbing="+allow_disturbing);
+						        
 						        
 						        ProfileInfo pi = new ProfileInfo.Builder()
 									.setid(id)
 									.setRegid(regid)
 				        			.setName(name)
-				        			.setActivity(activity)
 					        		.setGender(gender)
 					        		.setAge(age)
+				        			.setSports(sports)
 					        		.setLocation(location)
-					        		.setPhonenumber(phone)
+					        		.setLevel(level)
+					        		.setPhone(phone)
 					        		.setEmail(email)
-					        		.setHoursFrom(hoursFrom)
-					        		.setHoursTo(hoursTo)
-					        		.setAllowDisturbing(allowDisturbing)
+					        		.setTime(time)
+					        		.setAllowDisturbing(allow_disturbing)
+					        		.setGenderFilter(gender_filter)
+					        		.setAgeFilter(age_filter)
+				        			.setLocationFilter(location_filter)
+					        		.setLevelFilter(level_filter)
+					        		.setTimeFilter(time_filter)
 					        		.build();
 								
 								alist.add(pi);
