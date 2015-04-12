@@ -119,6 +119,8 @@ public class ProfileRegistration {
 	
 	public void getRegidServerAsync(){
 		
+		Log.v(TAG, "getRegidServerAsync");
+		
 		new AsyncTask<Void, Void, String>(){
 
 			@Override
@@ -142,7 +144,7 @@ public class ProfileRegistration {
 				// TODO Auto-generated method stub
 				super.onPostExecute(regid);
 				mListener.onResultRegidServer(regid);
-				getProfileAsync(regid);
+				//getProfileAsync(regid);
 			}
 
 		}.execute();
@@ -168,6 +170,8 @@ public class ProfileRegistration {
 	
 	public void sendProfileAsync(ProfileInfo pi) {
 		
+		Log.v(TAG, "sendProfileAsync");
+		
 		new AsyncTask<ProfileInfo, Void, Wrapper>(){
 			
         	int responseCode = 0;
@@ -190,7 +194,7 @@ public class ProfileRegistration {
             	HttpResponse response = null;
 				String responseString = null;
 				
-				List<NameValuePair> nameValuePair = new ArrayList<NameValuePair>(11);
+				List<NameValuePair> nameValuePair = new ArrayList<NameValuePair>(16);
             	nameValuePair.add(new BasicNameValuePair(Constants.KEY.REGID, params[0].regid));
             	nameValuePair.add(new BasicNameValuePair(Constants.KEY.NAME, params[0].name));
             	nameValuePair.add(new BasicNameValuePair(Constants.KEY.GENDER, String.valueOf(params[0].gender)));
@@ -235,6 +239,7 @@ public class ProfileRegistration {
             	Wrapper wrapper = new Wrapper();
             	wrapper.responseCode = responseCode;
             	wrapper.responseString = responseString;
+            	wrapper.regid = params[0].regid;
             	
             	return wrapper;
 			}
@@ -254,6 +259,8 @@ public class ProfileRegistration {
 	
 	public void getProfileAsync(String regid){
 
+		Log.v(TAG, "getProfileAsync");
+		
 		new AsyncTask<String, Void, String>(){
 
 	    	int responseCode = 0;
@@ -384,6 +391,8 @@ public class ProfileRegistration {
 	
 	public void deleteProfileAsync(ProfileInfo pi){
 		
+		Log.v(TAG, "deleteProfileAsync");
+		
 		new AsyncTask<ProfileInfo, Void, Wrapper>(){
 
 			ProgressDialog pd;
@@ -450,6 +459,8 @@ public class ProfileRegistration {
 	
 	public void updateProfileAsync(Bundle bd){
 		
+		Log.v(TAG, "updateProfileAsync");
+		
 		new AsyncTask<Bundle, Void, Wrapper>(){
 
 			int responseCode = 0;
@@ -467,7 +478,7 @@ public class ProfileRegistration {
 				
 				Bundle bd = params[0];
 				Log.v(TAG, "bd.size="+bd.size());
-				List<NameValuePair> nameValuePair = new ArrayList<NameValuePair>(bd.size());
+				List<NameValuePair> nameValuePair = new ArrayList<NameValuePair>();
 				for(Column c : Column.values()){
 					Log.v(TAG, "c="+c);
 					String value = bd.getString(c.name());
@@ -519,6 +530,8 @@ public class ProfileRegistration {
 	
 	public void getFriendsAsync(ProfileInfo pi){
 
+		Log.v(TAG, "getFriendsAsync");
+		
 		new AsyncTask<ProfileInfo, Void, String>(){
 
 	    	int responseCode = 0;
@@ -650,6 +663,8 @@ public class ProfileRegistration {
 					        		.build();
 								
 								alist.add(pi);
+								Log.v(TAG, "alist="+alist+ ", alist.sze="+alist.size());
+								
 							}
 						}
 						//rootObj.getJSONObject("");
@@ -671,6 +686,7 @@ public class ProfileRegistration {
 	
 		public String position;
 		public String allow_diturbing;
+		public String regid;
 	}
 	
 }

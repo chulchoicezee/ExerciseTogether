@@ -6,21 +6,24 @@ import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.TextView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 
 import com.exercise.together.adapter.AListAdapter;
 import com.exercise.together.util.Bean;
+import com.exercise.together.util.Constants;
 import com.exercise.together.util.ProfileInfo;
 
 public class FriendListActivity extends Activity {
 
 	private static final String TAG = "FriendListActivity";
 	private AListAdapter mListAdapter;
-	private ArrayList<ProfileInfo> mProfiles;
+	private ArrayList<ProfileInfo> mFriends;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -34,11 +37,15 @@ public class FriendListActivity extends Activity {
 		Log.v(TAG, "onCreate");
 		
 		Intent i = getIntent();
-		Bundle bd = i.getBundleExtra("friends");
-		ArrayList<Bean> friends = bd.getParcelableArrayList("friends");
+		//Bundle bd = i.getBundleExtra(Constants.KEY.PROFILE_INFO_ARRAY);
+		mFriends = i.getParcelableArrayListExtra(Constants.KEY.PROFILE_INFO_ARRAY);
 		
 		ListView lv = (ListView)findViewById(R.id.friendlist_lv);
-		mListAdapter = new AListAdapter<ProfileInfo>(this, R.layout.list_layout, mProfiles, null);
+		mListAdapter = new AListAdapter<ProfileInfo>(this, R.layout.list_layout, mFriends, null);
+		TextView emptyView = (TextView)this.findViewById(R.id.friendList_lv_empty);
+		emptyView.setText("no friends");
+		lv.setEmptyView(emptyView);
+		
 		lv.setAdapter(mListAdapter);
 		lv.setOnItemClickListener(new OnItemClickListener() {
 

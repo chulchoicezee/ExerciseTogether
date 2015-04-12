@@ -41,7 +41,7 @@ import com.exercise.together.util.ProfileRegistration.Wrapper;
 
 public class ProfileListFragment extends Fragment implements ProfileListener, OnItemClickListener {
 	
-	private static final String TAG = "MyProfileFragment";
+	private static final String TAG = "ProfileListFragment";
 	ArrayList<ProfileInfo> mProfiles;
 	ProfileRegistration mRegiHelper = null;
 	AListAdapter mListAdapter = null;
@@ -123,12 +123,27 @@ public class ProfileListFragment extends Fragment implements ProfileListener, On
 	            String message = "create is selected";
 	            Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
 	            Intent i = new Intent(getActivity().getApplicationContext(), ProfileEditActivity.class);
-	            startActivity(i);
+	            startActivityForResult(i, 1);
 	            break;
 	        }
 
 		
 		return super.onOptionsItemSelected(item);
+	}
+
+	
+	
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		// TODO Auto-generated method stub
+		super.onActivityResult(requestCode, resultCode, data);
+		if(resultCode == getActivity().RESULT_OK){
+			if(requestCode == 1){
+				String regid = data.getStringExtra(Constants.KEY.REGID);
+				Log.v(TAG, "onActivityResult regid="+regid);
+				mRegiHelper.getProfileAsync(regid);
+			}
+		}
 	}
 
 	@Override
@@ -139,7 +154,7 @@ public class ProfileListFragment extends Fragment implements ProfileListener, On
 		ProfileInfo pi = (ProfileInfo)parent.getAdapter().getItem(position);
 		
 		Intent i = new Intent(getActivity(), ProfileDetailActivity.class);
-		i.putExtra(Constants.KEY.PROFILE_INFO, pi);
+		i.putExtra(Constants.KEY.PROFILE_INFO_ARRAY, pi);
 		startActivity(i);
 		
 	}

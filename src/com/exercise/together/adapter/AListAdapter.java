@@ -18,6 +18,7 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 
+import com.exercise.together.FriendListActivity;
 import com.exercise.together.R;
 import com.exercise.together.util.FriendInfo;
 import com.exercise.together.util.ProfileInfo;
@@ -91,50 +92,68 @@ public class AListAdapter<T> extends ArrayAdapter<T>{
 			vc.tv1.setText(aFriend.email);
 		}else if(bean instanceof ProfileInfo){
 			Log.v(TAG, "bean instanceof ProfileInfo");
-			ProfileInfo aProfile = (ProfileInfo)mItems.get(position);
-			String[] sports = mContext.getResources().getStringArray(R.array.activities);
-			String[] ages = mContext.getResources().getStringArray(R.array.ages);
-			String[] locations = mContext.getResources().getStringArray(R.array.locations);
-			String temp = sports[aProfile.sports];
-			TypedArray imgs = mContext.getResources().obtainTypedArray(R.array.nav_drawer_icons);
-			
-			vc.iv1.setImageResource(imgs.getResourceId(aProfile.sports,  -1));
-			vc.tv1.setText(sports[aProfile.sports]);
-			vc.tv2.setText("연령대 : "+ages[aProfile.age]);
-			vc.tv4.setText("지역 : "+aProfile.location);
-			vc.sw1.setOnCheckedChangeListener(null);
-			vc.sw1.setChecked(aProfile.allow_disturbing==1?true:false);
-			//vc.sw1.setVisibility(View.GONE);
-
-			vc.sw1.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+			if(mContext instanceof FriendListActivity){
+				ProfileInfo aProfile = (ProfileInfo)mItems.get(position);
+				String[] sports = mContext.getResources().getStringArray(R.array.activities);
+				String[] ages = mContext.getResources().getStringArray(R.array.ages);
+				String[] locations = mContext.getResources().getStringArray(R.array.locations);
+				String temp = sports[aProfile.sports];
+				TypedArray imgs = mContext.getResources().obtainTypedArray(R.array.nav_drawer_icons);
 				
-				@Override
-				public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-					// TODO Auto-generated method stub
-					//Log.v(TAG, "checkInitialized="+checkInitialized+", getCount()="+getCount());
-					/*if(checkInitialized != getCount()){
-						checkInitialized++;
-						return;
-					}*/
-					//Log.v(TAG, "initializing="+initializing);
-					/*if(initializing){
-						return;
-					}*/
+				vc.iv1.setImageResource(R.drawable.ic_person_icon);
+				vc.tv1.setText(aProfile.name);
+				vc.tv2.setText("나이 : "+ages[aProfile.age]);
+				vc.tv4.setText("지역 : "+aProfile.location);
+				vc.sw1.setChecked(aProfile.allow_disturbing==1?true:false);
+				vc.sw1.setEnabled(false);
+				vc.sw1.setTag(position);
+			}else{
+				ProfileInfo aProfile = (ProfileInfo)mItems.get(position);
+				String[] sports = mContext.getResources().getStringArray(R.array.activities);
+				String[] ages = mContext.getResources().getStringArray(R.array.ages);
+				String[] locations = mContext.getResources().getStringArray(R.array.locations);
+				String temp = sports[aProfile.sports];
+				TypedArray imgs = mContext.getResources().obtainTypedArray(R.array.nav_drawer_icons);
+				
+				vc.iv1.setImageResource(imgs.getResourceId(aProfile.sports,  -1));
+				vc.tv1.setText(sports[aProfile.sports]);
+				vc.tv2.setText("연령대 : "+ages[aProfile.age]);
+				vc.tv4.setText("지역 : "+aProfile.location);
+				vc.sw1.setOnCheckedChangeListener(null);
+				vc.sw1.setChecked(aProfile.allow_disturbing==1?true:false);
+				//vc.sw1.setVisibility(View.GONE);
+
+				vc.sw1.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 					
-					int position = (int)buttonView.getTag();
-					ProfileInfo pi = (ProfileInfo)getItem(position);
-					pi.allow_disturbing = isChecked?1:2;
-					Log.v(TAG, "onCheckedChanged pi.id="+pi.id+", isChecked="+isChecked);
-					
-					Bundle bd = new Bundle();
-					bd.putString(com.exercise.together.util.Constants.KEY.POSITION, String.valueOf(position));
-					bd.putString(com.exercise.together.util.Constants.KEY.ID, String.valueOf(pi.id));
-					bd.putString(com.exercise.together.util.Constants.KEY.ALLOW_DISTURBING, String.valueOf(isChecked?1:2));
-					//Log.v(TAG, "pi.id="+pi.id);
-					mRegiHelper.updateProfileAsync(bd);
-				}
-			});
-			vc.sw1.setTag(position);
+					@Override
+					public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+						// TODO Auto-generated method stub
+						//Log.v(TAG, "checkInitialized="+checkInitialized+", getCount()="+getCount());
+						/*if(checkInitialized != getCount()){
+							checkInitialized++;
+							return;
+						}*/
+						//Log.v(TAG, "initializing="+initializing);
+						/*if(initializing){
+							return;
+						}*/
+						
+						int position = (int)buttonView.getTag();
+						ProfileInfo pi = (ProfileInfo)getItem(position);
+						pi.allow_disturbing = isChecked?1:2;
+						Log.v(TAG, "onCheckedChanged pi.id="+pi.id+", isChecked="+isChecked);
+						
+						Bundle bd = new Bundle();
+						bd.putString(com.exercise.together.util.Constants.KEY.POSITION, String.valueOf(position));
+						bd.putString(com.exercise.together.util.Constants.KEY.ID, String.valueOf(pi.id));
+						bd.putString(com.exercise.together.util.Constants.KEY.ALLOW_DISTURBING, String.valueOf(isChecked?1:2));
+						//Log.v(TAG, "pi.id="+pi.id);
+						mRegiHelper.updateProfileAsync(bd);
+					}
+				});
+				vc.sw1.setTag(position);
+			}
+			
 		}
 		
 		return v;

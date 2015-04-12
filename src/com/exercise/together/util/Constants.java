@@ -82,7 +82,7 @@ public final class Constants {
 	    
 	    public static final String DONE_REGISTRATION = "done_registration";
 	    public static final String APP_VERSION = "appVersion";
-	    public static final String PROFILE_INFO = "profile_info";
+	    public static final String PROFILE_INFO_ARRAY = "profile_info_array";
 	    public static final String POSITION = "position";
 	    
 	}

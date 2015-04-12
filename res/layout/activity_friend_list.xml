@@ -13,7 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="#CCCCCC" />
-    <TextView android:id="@+id/freindList_empty"
+    <TextView android:id="@+id/friendList_lv_empty"
         android:textSize="22sp"
         android:textColor="@android:color/black"
         style="@android:style/TextAppearance.Medium"

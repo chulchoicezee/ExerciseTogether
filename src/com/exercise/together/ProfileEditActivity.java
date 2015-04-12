@@ -6,6 +6,7 @@ import org.apache.http.HttpStatus;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -23,6 +24,7 @@ import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.Toast;
 
+import com.exercise.together.util.Constants;
 import com.exercise.together.util.ProfileInfo;
 import com.exercise.together.util.ProfileRegistration;
 import com.exercise.together.util.ProfileRegistration.ProfileListener;
@@ -32,7 +34,7 @@ public class ProfileEditActivity extends Activity implements OnItemSelectedListe
 
 	ArrayAdapter<CharSequence> adpGender, adpAge, adpSports, adpLocation, adpLevel, adpTime;
 	public static final int OPTION = Menu.FIRST+1;
-	private static final String TAG = "MyProfileEditActivity";
+	private static final String TAG = "ProfileEditActivity";
 	public static final String PROPERTY_REG_ID = "registration_id";
 	ProgressDialog mPd;
 	ProfileRegistration mRegiHelper = null;
@@ -54,11 +56,11 @@ public class ProfileEditActivity extends Activity implements OnItemSelectedListe
     CheckBox cbox_time = null;
     
     int mAllowDisturb = 1;
-    int mGenderFilter = 1;
-    int mAgeFilter = 1;
-    int mLocationFilter = 1;
-    int mLevelFilter = 1;
-    int mTimeFilter = 1;
+    int mGenderFilter = 0;
+    int mAgeFilter = 0;
+    int mLocationFilter = 0;
+    int mLevelFilter = 0;
+    int mTimeFilter = 0;
     
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -105,8 +107,8 @@ public class ProfileEditActivity extends Activity implements OnItemSelectedListe
 		 
 		 adpLevel = ArrayAdapter.createFromResource(this, R.array.levels, android.R.layout.simple_spinner_item);
 		 adpLevel.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-		 spn_age.setAdapter(adpLevel);
-		 spn_age.setOnItemSelectedListener(this);
+		 spn_level.setAdapter(adpLevel);
+		 spn_level.setOnItemSelectedListener(this);
 		 
 		 adpTime = ArrayAdapter.createFromResource(this, R.array.times, android.R.layout.simple_spinner_item);
 		 adpTime.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -147,7 +149,7 @@ public class ProfileEditActivity extends Activity implements OnItemSelectedListe
 		}else if(buttonView.getId() == R.id.proEdit_cb_time){
 			mTimeFilter = isChecked?1:0;
 		}
-
+		Log.v(TAG, "onCheckedChanged isChecked="+isChecked);
 	}
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -273,6 +275,10 @@ public class ProfileEditActivity extends Activity implements OnItemSelectedListe
 		Toast.makeText(this, wrapper.responseString, Toast.LENGTH_SHORT).show();
 		
 		if(wrapper.responseCode == HttpStatus.SC_OK){
+			Intent i = new Intent();
+			i.putExtra(Constants.KEY.REGID, wrapper.regid);
+			Log.v(TAG, "wrapper.regid="+wrapper.regid);
+			setResult(RESULT_OK, i);
 			finish();
 		}
 	}
